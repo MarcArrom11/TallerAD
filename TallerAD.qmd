@@ -1,0 +1,256 @@
+---
+title: "Taller evaluado de repaso para el Primer Parcial"
+subtitle: "20582- Análisis de Datos para el GMAT"
+format:
+  html:
+    theme: lumen
+    toc: true
+    toc-depth: 3
+Rendering:
+    embed-resources: true
+---
+
+# RESUMEN
+
+FALTA
+
+# Planteamiento del problema y metodología a emplea
+
+El Mieloma Múltiple (MM) es un tipo de cáncer que afecta a las células plasmáticas, un tipo de glóbulo blanco que se encuentra en la médula ósea y que son claves en el sistema inmunológico ya que producen anticuerpos. 
+
+En el MM, las células plasmáticas se vuelven anormales y comienzan a multiplicarse de forma descontrolada, produciendo únicamente un tipo de anticuerpo llamado paraproteína o proteína M, que no tiene una función útil en el organismo. Esta paraproteína aumenta progresivamente, desplazando a las otras inmunoglobulinas, cuya producción disminuye. Al reducirse las defensas naturales del cuerpo, el sistema inmunológico se ve debilitado, lo que aumenta la susceptibilidad a infecciones.
+Generalmente, los síntomas incluyen dolor óseo, debido al daño que produce en los huesos, fatiga, como resultado de la anemia. Otros síntomas son la pérdida de peso, insuficiencia renal y niveles altos de calcio en sangre, lo que puede provocar náuseas, sed excesiva y confusión.
+Por ahora, no tiene cura, pero sí un tratamiento que permite tener largos períodos de remisión, es decir, sin síntomas.
+
+Los datos con los que vamos a trabjar fueron aportados por la universidad de Arkansas y estan formados por 564 observaciones de las cuales se tomaron 23 variables.
+
+```{r LIBRERIAS, echo = FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(readxl)
+library(survival)
+library(survminer)
+library(xtable)
+library(kableExtra)
+library(gt) # Para una mejor visulización de las tablas
+library(gridExtra) # Para poner gráficos uno al lado del otro
+library(ggcorrplot) # Para la creación del gráfico de correlación
+library(dplyr)
+library(scales)
+library(MASS)
+```
+
+
+
+```{r CARGA DATOS, echo = FALSE, warning=FALSE}
+# Carga de datos 
+Arkansas <- read_excel("~/Downloads/TFG/R/TFGMarcArrom/Input/Arkansas.xlsx", 
+                       col_types = c("numeric", "numeric", "text", 
+                                     "numeric", "text", "text", "text", 
+                                     "numeric", "numeric", "numeric", 
+                                     "numeric", "numeric", "numeric", 
+                                     "numeric", "numeric", "numeric", 
+                                     "numeric", "numeric", "numeric", 
+                                     "numeric", "numeric", "numeric", 
+                                     "numeric"))
+
+# Reorganización de las variables
+Arkansas <- Arkansas[, c("original order", "PATID", "PROT", "SEX", "RACE", "ISOTYPE", "AGE", "B2M", "CRP", "CREAT", "LDH", "ALB", "HGB", "ASPC", "BMPC", "MRI", "Cyto_Abn", "CPS1", "CPR1", "EFS_Censor", "EFS_Time", "OS_Censor", "OS_Time")]
+
+# Considerar los valores "nonsecretory" como faltantes en la columna ISOTYPE
+Arkansas$ISOTYPE[Arkansas$ISOTYPE == "Nonsecretory"] <- NA
+
+```
+
+```{r TABLA VARIABLES, echo = FALSE, warning=FALSE}
+visualizacion_variables = data.frame(
+  nombres_variables = colnames(Arkansas),
+  explicacion = c("Orden de los datos",
+                  "Identificación Paciente",
+                  "Tratamiento Recibido (\"TT2\" o \"TT3\")",
+                  "Sexo del paciente (\"male\" o \"female\")",
+                  "Raza del paciente (\"white\" o \"other\")",
+                  "Isotipo del paciente (\"IgA\" , \"IgD\", \"IgG\" o \"FLC\")",
+                  "Edad del paciente (en meses)",
+                  "Niveles de Microglobulina beta-2 (en mg/l)",
+                  "Niveles de Proteína C-Reactiva (en mg/l)",
+                  "Niveles de Creatinina (en mg/dl)",
+                  "Niveles de Lactato Deshidrogenasa (en U/l)",
+                  "Niveles de Albúmina (en g/l)",
+                  "Niveles de Hemoglobina (en g/dl)",
+                  "Células plasmáticas en aspirado de médula ósea",
+                  "Células plasmáticas en biopsia de médula ósea",
+                  "Número de lesiones focales",
+                  "Indica si presenta mutaciones citogenéticas (0 = No , 1 = Sí)",
+                  "Variable sin contexto",
+                  "Variable sin contexto",
+                  "Indica si el paciente ha recaido (0 = No | 1 = Sí)",
+                  "Tiempo sin recaer (en meses)",
+                  "Indica si el paciente falleció (0 = No | 1 = Sí)",
+                  "Tiempo de supervivencia (en meses)"
+                  )
+) %>% 
+as_tibble
+tabla_visualizacion_variables <- visualizacion_variables %>%
+  gt() %>%
+  tab_header(
+    title = "Variables de estudio",
+  ) %>%
+  fmt_percent(
+    columns = c("nombres_variables", "explicacion"),
+    decimals = 1
+  ) %>%
+  cols_label(
+    nombres_variables = "Variable",
+    explicacion = "Explicación"
+  ) %>%
+  tab_options(
+    table.font.size = px(14),
+    heading.title.font.size = px(18),
+  )
+tabla_visualizacion_variables
+
+```
+
+Siguiendo las instrucciones de esta entrega, vamos a simular los datos de las siguientes variables, aunque tomaremos la media y la varianza de la muestra tomada en la base de datos Arkansas para evitar resultados inverosimiles.
+
+```{r TABLA VARIABLES TALLER, echo = FALSE, warning=FALSE}
+visualizacion_variables = data.frame(
+  nombres_variables = c("AGE", "B2M", "CRP", "LDH", "ALB", "HGB", "CREAT", "SEX", "PROT"),
+  explicacion = c("Cuantitativa",
+                  "Cuantitativa",
+                  "Cuantitativa",
+                  "Cuantitativa",
+                  "Ordinal: Bajo, Normal, Alto",
+                  "Ordinal: Bajo, Normal, Alto",
+                  "Ordinal: Bajo, Normal, Alto",
+                  "Nominal: Hombre, Mujer ",
+                  "Nominal: TA, TB")
+) %>% 
+as_tibble
+tabla_visualizacion_variables <- visualizacion_variables %>%
+  gt() %>%
+  tab_header(
+    title = "Variables simuladas",
+  ) %>%
+  fmt_percent(
+    columns = c("nombres_variables", "explicacion"),
+    decimals = 1
+  ) %>%
+  cols_label(
+    nombres_variables = "Variable",
+    explicacion = "Explicación"
+  ) %>%
+  tab_options(
+    table.font.size = px(14),
+    heading.title.font.size = px(18),
+  )
+tabla_visualizacion_variables
+
+```
+```{r}
+medias <- c(mean(Arkansas$AGE, na.rm = TRUE),
+            mean(Arkansas$B2M, na.rm = TRUE),
+            mean(Arkansas$CRP, na.rm = TRUE),
+            mean(Arkansas$LDH, na.rm = TRUE))
+
+Arkansas_sub <- Arkansas %>%
+  dplyr::select(AGE, B2M, CRP, LDH) %>% # Seleccionamos las variables que queremos estudiar
+  na.omit()  
+
+# Calcular la matriz de covarianza
+covarianza <- cov(Arkansas_sub)
+
+set.seed(11)
+
+datos_cuantitativos <- mvrnorm(150, mu = medias, Sigma = covarianza)
+
+datos_mieloma <- tibble(
+  AGE = round(datos_cuantitativos[,1]),
+  B2M = round(datos_cuantitativos[,2], 1),
+  CRP = round(datos_cuantitativos[,3], 1),
+  LDH = round(datos_cuantitativos[,4]),
+  SEX = sample(c("Hombre", "Mujer"), 150, replace = TRUE),
+  PROT = sample(c("Tratamiento A", "Tratamiento B"), 150, replace = TRUE),
+  ALB = ordered(sample(c("Bajo", "Normal", "Alto"), 150, replace = TRUE)),
+  HGB = ordered(sample(c("Bajo", "Normal", "Alto"), 150, replace = TRUE)),
+  CREAT = ordered(sample(c("Bajo", "Medio", "Alto"), 150, replace = TRUE))
+)
+
+
+
+# Nos salen valores negativos, así que reescalamos los valores.
+columnas <- c("B2M", "CRP", "LDH", "AGE")
+# Recorrer cada columna y ajustar si hay valores negativos
+for (col in columnas) {
+  # Verificar si la columna tiene algún valor negativo
+  if (any(datos_mieloma[[col]] < 0)) {
+    # Sumar el valor mínimo para que todos los valores sean positivos
+    datos_mieloma[[col]] <- datos_mieloma[[col]] + abs(min(datos_mieloma[[col]]))
+  }
+}
+
+```   
+
+```{r}
+Nuevas_Variables <- Arkansas %>%
+ dplyr::select(OS_Time, ISOTYPE) %>%
+  na.omit()  %>%
+  sample_n(150)
+
+```
+```{r}
+# Agregar identificador simulado
+Nuevas_Variables <- Nuevas_Variables %>%
+  mutate(ID = sample(1:150, nrow(Nuevas_Variables), replace = FALSE))
+
+datos_mieloma <- datos_mieloma %>%
+  mutate(ID = sample(1:150, nrow(datos_mieloma), replace = FALSE))
+# Unir las dos tablas
+
+datos_completos <- left_join(datos_mieloma, Nuevas_Variables, by = "ID")
+
+```
+
+
+
+### Cuarto paso
+
+```{r}
+# Contamos las frecuencias de cada valor en la variable ISOTYPE
+frecuencias_isotype <- table(datos_completos$ISOTYPE)
+frecuencias_isotype
+
+
+# Total de observaciones en la variable ISOTYPE
+total_observaciones <- sum(frecuencias_isotype)
+
+# Probabilidades de cada categoría
+probabilidades_isotype <- frecuencias_isotype / total_observaciones
+probabilidades_isotype
+
+
+# Número de muestras
+n_muestra <- 20
+
+# Probabilidad de tener un IgA
+p_FLC <- probabilidades_isotype["FLC"]
+
+# Usamos la distribución binomial para modelar el evento
+# Probabilidad de que al menos una persona tenga IgA
+probabilidad_evento <- 1 - dbinom(0, size = n_muestra, prob = p_FLC)
+probabilidad_evento
+
+```
+# Quinto paso
+
+```{r}
+# Ajustar un modelo de regresión lineal múltiple para OS_Time
+modelo_os_time <- lm(OS_Time ~ AGE + B2M + CRP + LDH, data = Arkansas)
+
+# Resumen del modelo
+summary(modelo_os_time)
+
+```
+
+
+
