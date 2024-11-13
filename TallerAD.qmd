@@ -12,9 +12,13 @@ Rendering:
 
 # RESUMEN
 
-FALTA
+El Mieloma Múltiple (MM) es un cáncer hematológico que afecta a las células plasmáticas en la médula ósea, resultando en la producción descontrolada de una paraproteína que afecta la función inmunológica del cuerpo. A pesar de la falta de cura, los tratamientos actuales permiten periodos de remisión prolongados. Este informe analiza datos clínicos de 564 pacientes con MM, proporcionados por la Universidad de Arkansas, con el objetivo de explorar el impacto de diversas variables en el tiempo de supervivencia de los pacientes.
 
-# Planteamiento del problema y metodología a emplea
+Se generaron datos simulados basados en las variables del conjunto de datos y se realizaron análisis descriptivos y pruebas estadísticas para determinar si las variables seleccionadas siguen distribuciones normales y cómo influyen en la supervivencia. El análisis concluyó que la mayoría de las variables cuantitativas siguen una distribución normal, y el modelo de regresión mostró que la variable **LDH** tiene una relación significativa y negativa con el tiempo de supervivencia. Sin embargo, otras variables como **AGE**, **B2M** y **CRP** no mostraron efectos significativos.
+
+Además, se analizó la efectividad del tratamiento en el tiempo de supervivencia, utilizando el test de Hotelling para comparar las medias de las variables entre los tratamientos, sin encontrar diferencias significativas. Estos resultados sugieren que, aunque algunas variables pueden estar asociadas con la supervivencia, el modelo no logra explicar completamente la variabilidad del tiempo de supervivencia.
+
+# Planteamiento del problema y metodología a emplear
 
 El Mieloma Múltiple (MM) es un tipo de cáncer que afecta a las células plasmáticas, un tipo de glóbulo blanco que se encuentra en la médula ósea y que son claves en el sistema inmunológico ya que producen anticuerpos. 
 
@@ -22,7 +26,13 @@ En el MM, las células plasmáticas se vuelven anormales y comienzan a multiplic
 Generalmente, los síntomas incluyen dolor óseo, debido al daño que produce en los huesos, fatiga, como resultado de la anemia. Otros síntomas son la pérdida de peso, insuficiencia renal y niveles altos de calcio en sangre, lo que puede provocar náuseas, sed excesiva y confusión.
 Por ahora, no tiene cura, pero sí un tratamiento que permite tener largos períodos de remisión, es decir, sin síntomas.
 
+
+
+En este informe vamos a genearar aleatoriamente diversas variables relacionadas con parámetros clínicos del MM y vamos a realizar algunos contrastes y modelos con el fin de analizar cual es su efecto en el tiempo de sobrevida.
+
 Los datos con los que vamos a trabjar fueron aportados por la universidad de Arkansas y estan formados por 564 observaciones de las cuales se tomaron 23 variables.
+
+
 
 ```{r LIBRERIAS, echo = FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -35,6 +45,7 @@ library(gt) # Para una mejor visulización de las tablas
 library(gridExtra) # Para poner gráficos uno al lado del otro
 library(ggcorrplot) # Para la creación del gráfico de correlación
 library(dplyr)
+library(Hotelling)
 library(scales)
 library(MASS)
 ```
@@ -60,6 +71,9 @@ Arkansas <- Arkansas[, c("original order", "PATID", "PROT", "SEX", "RACE", "ISOT
 Arkansas$ISOTYPE[Arkansas$ISOTYPE == "Nonsecretory"] <- NA
 
 ```
+
+Aquí se puede observar las variables que contiene la base de datos de Arkansas junto a una pequeña descripción.
+
 
 ```{r TABLA VARIABLES, echo = FALSE, warning=FALSE}
 visualizacion_variables = data.frame(
@@ -111,20 +125,25 @@ tabla_visualizacion_variables
 
 ```
 
+
+# Generación de datos y analisis descriptivo
+
+## Simulación de datos
 Siguiendo las instrucciones de esta entrega, vamos a simular los datos de las siguientes variables, aunque tomaremos la media y la varianza de la muestra tomada en la base de datos Arkansas para evitar resultados inverosimiles.
 
 ```{r TABLA VARIABLES TALLER, echo = FALSE, warning=FALSE}
 visualizacion_variables = data.frame(
   nombres_variables = c("AGE", "B2M", "CRP", "LDH", "ALB", "HGB", "CREAT", "SEX", "PROT"),
-  explicacion = c("Cuantitativa",
+  tipo_variable = c("Cuantitativa",
                   "Cuantitativa",
                   "Cuantitativa",
                   "Cuantitativa",
-                  "Ordinal: Bajo, Normal, Alto",
-                  "Ordinal: Bajo, Normal, Alto",
-                  "Ordinal: Bajo, Normal, Alto",
-                  "Nominal: Hombre, Mujer ",
-                  "Nominal: TA, TB")
+                  "Ordinal",
+                  "Ordinal",
+                  "Ordinal",
+                  "Nominal",
+                  "Nominal"),
+posibles_valores = c("Valores positivos", "Valores positivos", "Valores positivos", "Valores positivos", " Bajo, Normal, Alto", " Bajo, Normal, Alto", " Bajo, Normal, Alto", "Hombre, Mujer", "Tratamiento A, Tratamiento B")
 ) %>% 
 as_tibble
 tabla_visualizacion_variables <- visualizacion_variables %>%
@@ -133,12 +152,13 @@ tabla_visualizacion_variables <- visualizacion_variables %>%
     title = "Variables simuladas",
   ) %>%
   fmt_percent(
-    columns = c("nombres_variables", "explicacion"),
+    columns = c("nombres_variables", "tipo_variable", "posibles_valores"),
     decimals = 1
   ) %>%
   cols_label(
     nombres_variables = "Variable",
-    explicacion = "Explicación"
+    tipo_variable = "Tipo Variable",
+    posibles_valores = "Posibles valores"
   ) %>%
   tab_options(
     table.font.size = px(14),
@@ -147,7 +167,7 @@ tabla_visualizacion_variables <- visualizacion_variables %>%
 tabla_visualizacion_variables
 
 ```
-```{r}
+```{r,  echo = FALSE, warning=FALSE}
 medias <- c(mean(Arkansas$AGE, na.rm = TRUE),
             mean(Arkansas$B2M, na.rm = TRUE),
             mean(Arkansas$CRP, na.rm = TRUE),
@@ -173,12 +193,12 @@ datos_mieloma <- tibble(
   PROT = sample(c("Tratamiento A", "Tratamiento B"), 150, replace = TRUE),
   ALB = ordered(sample(c("Bajo", "Normal", "Alto"), 150, replace = TRUE)),
   HGB = ordered(sample(c("Bajo", "Normal", "Alto"), 150, replace = TRUE)),
-  CREAT = ordered(sample(c("Bajo", "Medio", "Alto"), 150, replace = TRUE))
+  CREAT = ordered(sample(c("Bajo", "Normal", "Alto"), 150, replace = TRUE))
 )
 
 
-
 # Nos salen valores negativos, así que reescalamos los valores.
+
 columnas <- c("B2M", "CRP", "LDH", "AGE")
 # Recorrer cada columna y ajustar si hay valores negativos
 for (col in columnas) {
@@ -191,14 +211,16 @@ for (col in columnas) {
 
 ```   
 
-```{r}
+Ahora, de la base de datos Arkansas, seleccionamos 150 observaciones y nos quedamos con las variables OS_time y ISOTYPE. Estas las unimos a las observaciones simuladas anteriormente para así tener un única base de datos.
+```{r,  echo = FALSE, warning=FALSE}
 Nuevas_Variables <- Arkansas %>%
  dplyr::select(OS_Time, ISOTYPE) %>%
   na.omit()  %>%
   sample_n(150)
 
 ```
-```{r}
+
+```{r,  echo = FALSE, warning=FALSE}
 # Agregar identificador simulado
 Nuevas_Variables <- Nuevas_Variables %>%
   mutate(ID = sample(1:150, nrow(Nuevas_Variables), replace = FALSE))
@@ -211,11 +233,182 @@ datos_completos <- left_join(datos_mieloma, Nuevas_Variables, by = "ID")
 
 ```
 
+## Análisis descriptivo
+
+Si realizamos un histograma de las variablas cuantitativas, obserservamos como todas las gráficas estan centradas sobre la media y presentan una curva similar a la normal.
+Quizás, la gráfica de LDH puede presentar una distribución distinta.
+En la siguiente sección, [Pruebas estadísticas](#Pruebas-estadisticas), analizaremos si realmente las variables se ajustan a una distribución normal.
+```{r, echo=FALSE,warning=FALSE}
+# Cargar las bibliotecas necesarias
+library(ggplot2)
+library(gridExtra)
+
+histograma_AGE <- ggplot(datos_completos, aes_string(x = "AGE")) +
+    geom_histogram(binwidth = 5, fill = "skyblue", color = "black") +
+    labs(title = "Histograma de EDAD", x = "Edad (Años)", y = "Frecuencia")
+
+histograma_B2M <- ggplot(datos_completos, aes_string(x = "B2M")) +
+    geom_histogram(binwidth = 4, fill = "skyblue", color = "black") +
+    labs(title = "Histograma de B2M", x = "Niveles B2M (mg/l)", y = "Frecuencia")
+
+histograma_CRP <- ggplot(datos_completos, aes_string(x = "CRP")) +
+    geom_histogram(binwidth = 5, fill = "skyblue", color = "black") +
+    labs(title = "Histograma de CRP", x = "Niveles CRP (mg/l)", y = "Frecuencia")
+
+histograma_LDH <- ggplot(datos_completos, aes_string(x = "LDH")) +
+    geom_histogram(binwidth = 10, fill = "skyblue", color = "black") +
+    labs(title = "Histograma de LDH", x = "Niveles LDH (U/l)", y = "Frecuencia")
 
 
-### Cuarto paso
 
-```{r}
+  grid.arrange(histograma_AGE, histograma_B2M, histograma_CRP, histograma_LDH, ncol = 2)
+```
+Para la variable OS_time, realizaremos una gráfica de su densidad y así observar su posible distribución.
+
+```{r, echo=FALSE,warning=FALSE}
+
+# Calcular media y desviación estándar de OS_Time
+media_os_time <- mean(datos_completos$OS_Time, na.rm = TRUE)
+desviacion_os_time <- sd(datos_completos$OS_Time, na.rm = TRUE)
+
+# Crear gráfico de densidad con la curva normal y leyenda
+ggplot(datos_completos, aes(x = OS_Time)) +
+  geom_density(aes(fill = "Densidad empírica"), alpha = 0.7) +  # Densidad empírica
+  stat_function(fun = dnorm, args = list(mean = media_os_time, sd = desviacion_os_time), 
+                aes(colour= "Densidad de una normal"), size = 1.2) +  # Curva normal
+  scale_fill_manual(name = "Densidad", values = c("Densidad empírica" = "blue")) + 
+  scale_color_manual(name = "Curva", values = c("Densidad de una normal" = "red"))+
+  labs(title = "Gráfico de densidad de OS_Time", 
+       x = "Tiempo de sobrevida (meses)", y = "Densidad") +
+  theme_classic() +
+  theme(legend.position = "right")  # Coloca la leyenda en el lado derecho
+
+```
+
+
+
+Para las variables ordinales y nominales, realizaremos un diagrama de barras agrupadas y, además, una tabla donde aparecen las frecuencias.
+En este observamos como todas las variables tienen aproximadamente el mismo número de observaciones para cada nivel, a exepción, quizá del número de observaciones con niveles de HGB altos.
+
+```{r, echo=FALSE,warning=FALSE}
+# Convertir a formato largo para el gráfico
+data_agrupada <- datos_completos %>%
+  dplyr::select(ALB, HGB, CREAT) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Nivel")
+
+# Reordenar los niveles para la variable 'Nivel' en el gráfico
+data_agrupada <- data_agrupada %>%
+  mutate(Nivel = factor(Nivel, levels = c("Bajo", "Normal", "Alto")))
+
+# Crear el gráfico de barras agrupadas
+ggplot(data_agrupada, aes(x = Variable, fill = Nivel)) + 
+  geom_bar(position = "dodge") + 
+  labs(title = "Distribución de niveles en ALB, HGB, y CREAT",
+       x = "Variable",
+       y = "Frecuencia") +
+  theme_classic() +
+  scale_fill_manual(values = c("Bajo" = "blue", "Normal" = "green", "Alto" = "red"),
+                    breaks = c("Alto", "Normal", "Bajo"))  # Orden específico para la leyenda
+
+```
+```{r, echo=FALSE,warning=FALSE}
+# Crear la tabla de frecuencia
+tabla_frecuencia <- data_agrupada %>%
+  count(Nivel, Variable) %>%
+  pivot_wider(names_from = "Variable", values_from = "n", values_fill = list(n = 0))
+
+# Mostrar la tabla
+print(tabla_frecuencia)
+
+```
+Por último, si analizamos las variables nominales SEX y ISOTYPE, observamos como hay aproximadamente el mismo número de observaciones para ambos sexos.
+Por el contrario, en la variable ISOTYPE, observamos como hay una gran disparidad entre los diferentes isotipos. En este caso, el isotipo *IgD* no estaría representado en esta muestra.
+
+```{r, echo=FALSE,warning=FALSE}
+# Crear un gráfico de barras para la variable SEX con el número de observaciones encima de cada barra
+ggplot(datos_completos, aes(x = SEX)) +
+  geom_bar(fill = "skyblue", color = "black") +
+  geom_text(size = 6,stat = 'count', aes(label = ..count..), vjust = -0.5) +  # Añadir etiquetas con el número de observaciones
+  labs(title = "Distribución de SEX", x = "Sexo", y = "Frecuencia") +
+  theme_classic()+
+  ylim(0,90)
+```
+```{r, echo=FALSE,warning=FALSE}
+# Crear un gráfico de barras para la variable SEX con el número de observaciones encima de cada barra
+ggplot(datos_completos, aes(x = ISOTYPE)) +
+  geom_bar(fill = "skyblue", color = "black") +
+  geom_text(size = 6 ,stat = 'count', aes(label = ..count..), vjust = -0.5) +  # Añadir etiquetas con el número de observaciones
+  labs(title = "Distribución de ISOTYPE", x = "Isotipo", y = "Frecuencia") +
+  theme_classic() +
+  ylim(0,100)
+
+```
+
+Para terminar, realizaremos un mapa de correlación
+
+```{r, echo=FALSE,warning=FALSE}
+# Seleccionar las variables de interés y omitir los NA
+variables_interes <- datos_completos[1:4] 
+
+# Calcular la matriz de correlación
+matriz_correlacion <- cor(variables_interes)
+# Generar el gráfico de correlación
+ggcorrplot(matriz_correlacion, 
+           hc.order = TRUE,         # Ordenar jerárquicamente
+           type = "lower",          # Mostrar solo la mitad inferior
+           lab = TRUE,              # Añadir los valores de correlación
+           lab_size = 3.5,          # Tamaño del texto de los valores
+           colors = c("#4575b4", "#f7f7f7", "#d73027")) +  # Colores personalizados
+  ggtitle("Mapa de Correlación de Variables") +    # Añadir título
+  labs(x = "Variables", y = "Variables") +         # Títulos de los ejes
+  theme(plot.title = element_text(hjust = 0.5, size = 16),   # Centrar el título y ajustar tamaño
+        axis.title.x = element_text(size = 14),   # Tamaño del título del eje x
+        axis.title.y = element_text(size = 14))   # Tamaño del título del eje y
+```
+La mayoría de las correlaciones en esta matriz son débiles o muy débiles, con la excepción de la relación entre CRP y LDH, que es la más fuerte, aunque aún se considera moderada. Esto sugiere que, en general, las variables en esta matriz no están fuertemente relacionadas entre sí en el conjunto de datos.
+
+
+# Pruebas estadísticas {#Pruebas-estadisticas}
+
+## Distribuciones variables cuantitativas
+
+Comprobemos si las variables B2M, AGE,CRP, LDH y OS_Time siguen una distribución normal.
+Para ello, realizaremos el test de Shapiro-Wilks, que realiza el contraste
+
+$$ 
+\begin{cases}
+  H_0: \text{Los datos siguen una distribución normal} \\
+  H_1: \text{Los datos no siguen una distribución normal}
+\end{cases}
+$$
+
+```{r, echo=FALSE,warning=FALSE}
+# Definir las variables a evaluar
+variables <- c("B2M", "AGE", "CRP", "LDH", "OS_Time")
+
+# Aplicar el test de Shapiro-Wilk a cada una de las variables
+shapiro_results <- sapply(variables, function(var) {
+  shapiro_test <- shapiro.test(datos_completos[[var]])
+  return(shapiro_test$p.value)
+})
+
+# Mostrar los resultados
+shapiro_results
+
+
+```
+
+Observamos que todos los p-valores son superiores a 0.05, por lo que no se rechaza la hipotesis nula.
+
+En conlusión, todas las variables siguen una distribución normal.
+
+
+## Probabilidad de tener un factor de protector
+
+En otros análisis se haobservado como aquellas personas con el isotipo *FLC* tienen un mayor tiempo de sobrevida. Por eso, veamos cual es la probabilidad de que esto ocurra.
+
+Calculamos la tabla de frecuencias, posteriormente las probabilidades y para acabar 
+```{r, echo=FALSE, warning=FALSE}
 # Contamos las frecuencias de cada valor en la variable ISOTYPE
 frecuencias_isotype <- table(datos_completos$ISOTYPE)
 frecuencias_isotype
@@ -241,16 +434,126 @@ probabilidad_evento <- 1 - dbinom(0, size = n_muestra, prob = p_FLC)
 probabilidad_evento
 
 ```
-# Quinto paso
+## Modelo para estimar el tiempo de sobrevida
 
-```{r}
+```{r, echo = FALSE,warning=FALSE}
 # Ajustar un modelo de regresión lineal múltiple para OS_Time
-modelo_os_time <- lm(OS_Time ~ AGE + B2M + CRP + LDH, data = Arkansas)
+modelo_os_time <- lm(OS_Time ~ AGE + B2M + CRP + LDH, data = datos_completos)
 
-# Resumen del modelo
-summary(modelo_os_time)
+
+# Extraer el resumen del modelo
+modelo_os_time_summary <- summary(modelo_os_time)
+
+# Crear la tabla de coeficientes de forma similar al modelo de Cox
+tabla_regresion <- data.frame(
+  Coeficiente_Beta = round(modelo_os_time_summary$coefficients[, "Estimate"], 5),
+  Error_Estandar = round(modelo_os_time_summary$coefficients[, "Std. Error"], 5),
+  t_valor = round(modelo_os_time_summary$coefficients[, "t value"], 3),
+  P_valor = modelo_os_time_summary$coefficients[, "Pr(>|t|)"]
+)
+
+# Mostrar la tabla generada
+print(tabla_regresion)
 
 ```
+Analizando las variables en el modelo lineal obtenemos que 
+
+AGE: Su coeficiente es 0.096, lo que indica que por cada año adicional, el tiempo de sobrevida aumenta ligeramente en promedio, pero no de manera significativa (valor p = 0.606).
+
+B2M: Un aumento de una unidad en B2M implica un aumento de tiempo de sobrevida, aunque tampoco es significativo (p = 0.521).
+
+CRP: Su coeficiente es 0.128, lo que sugiere un incremento en el tiempo de sobrevida por cada unidad adicional, pero de nuevo, esta relación no es estadísticamente significativa (p = 0.180).
+
+LDH: Un aumento en LDH se asocia con una disminución en el tiempo de sobrevida general (coeficiente de -0.059), y esta relación sí es significativa (p = 0.039), indicando que LDH es un predictor relevante para el tiempo de sobrevida.
+
+Además, si obseravamos el R-cuadrado ajustado este tiene un valor muy bajo, lo que indica que la explicabilidad del modelo es bajo.
+
+En conclusión, el modelo no muestra una relación estadísticamente significativa en general entre las variables predictoras y OS_Time. Aunque la variable LDH presenta una relación significativa y negativa, el bajo valor de $R^2$ sugiere que estas variables predictoras no explican bien la variabilidad en el tiempo de supervivencia.
+
+
+## Efectividad del tratimiento en el tiempo de sobrevida
+
+Analizemos si existen diferencias entre el vector de medias multivariado de la variables cuantitativas anteriormente generadas (B2M, AGE, CRP, LDH) de la población que ha recibido diferente tratamiento.
+Para ello, vamos a realizar un test de Hotelling, primero usando la función de R y luego calculado el estadístico manualmente. Este test realiza el siguiente contraste:
+
+$$
+\begin{cases}
+H_0 : \boldsymbol{\mu}_A = \boldsymbol{\mu}_B \\
+H_1 : \boldsymbol{\mu}_A \neq \boldsymbol{\mu}_B
+\end{cases}
+$$
+
+Test realizado con la función de R:
+```{r, echo=FALSE, warning=FALSE}
+
+# Generalmos los dos grupos
+grupo_A <- datos_completos %>%
+  dplyr::filter(PROT == "Tratamiento A") %>%
+  dplyr::select(OS_Time, AGE, B2M, CRP, LDH)
+
+grupo_B <- datos_completos %>%
+  dplyr::filter(PROT == "Tratamiento B") %>%
+  dplyr::select(OS_Time, AGE, B2M, CRP, LDH)
+
+# Realizamos el test
+resultado_hotelling <- hotelling.test(grupo_A, grupo_B)
+
+resultado_hotelling
+
+```
+Test realizado a mano:
+```{r, echo=FALSE, warning=FALSE}
+# Calculamos el tamaño de cada grupo
+n_A <- nrow(grupo_A)
+n_B <- nrow(grupo_B)
+
+# Calculamos los vectores de medias
+mean_A <- colMeans(grupo_A)
+mean_B <- colMeans(grupo_B)
+
+# Calculamos las matrices de covarianza de cada grupo
+cov_A <- cov(grupo_A)
+cov_B <- cov(grupo_B)
+
+# Calculamos la matriz de covarianza agrupada
+S <- ((n_A - 1) * cov_A + (n_B - 1) * cov_B) / (n_A + n_B - 2)
+
+# Calculamos T^2
+diff_means <- mean_A - mean_B
+T2 <- (n_A * n_B / (n_A + n_B)) * t(diff_means) %*% solve(S) %*% diff_means
+
+# Convertimos a estadístico F
+p <- ncol(grupo_A)  # Número de variables
+F_value <- ((n_A + n_B - p - 1) * T2) / (p * (n_A + n_B - 2))
+
+# Grados de libertad
+df1 <- p
+df2 <- n_A + n_B - p - 1
+
+# p-valor
+p_value <- pf(F_value, df1, df2, lower.tail = FALSE)
+
+# Mostrar resultados  
+
+print(data_frame(T2 = T2, F_value = F_value, p_value = p_value))
+```
+
+Observamos que obtenemos un p-valor alto, 0.4076, por lo que no podemos rechazar la hipotesis nula de que el vector de medias sean distintos para los diferentes tratamientos.
+
+# Conclusiones
+
+En este análisis de datos sobre el Mieloma Múltiple (MM), se ha explorado el impacto de varias variables clínicas sobre el tiempo de supervivencia de los pacientes, utilizando datos de la Universidad de Arkansas y simulaciones adicionales.
+
+1. **Distribución normal**: Las pruebas realizadas con el test de Shapiro-Wilk indican que las variables cuantitativas **B2M, AGE, CRP, LDH** y **OS_Time** siguen una distribución normal, ya que todos los valores p fueron mayores a 0.05, lo que nos permitió no rechazar la hipótesis nula de normalidad.
+
+2. **Relación entre variables**: A través del análisis de correlación, se observa que la mayoría de las variables están débilmente correlacionadas entre sí, con la excepción de **CRP** y **LDH**, cuya relación moderada sugiere una posible interdependencia clínica entre estas dos variables.
+
+3. **Efecto de las variables en el tiempo de supervivencia**: Al analizar un modelo de regresión lineal para estimar el tiempo de supervivencia, se concluye que **LDH** es la única variable con una relación estadísticamente significativa y negativa con el tiempo de supervivencia (p = 0.039), lo que indica que a medida que aumenta el valor de LDH, el tiempo de supervivencia tiende a disminuir. Las demás variables, como **AGE**, **B2M** y **CRP**, no muestran una relación significativa con el tiempo de supervivencia.
+
+4. **Tratamiento y tiempo de supervivencia**: El análisis sobre el efecto del tratamiento (**PROT**) sobre las variables cuantitativas no muestra diferencias significativas entre los tratamientos cuando se evalúa el vector de medias multivariado utilizando el test de Hotelling. El p-valor alto (0.4076) indica que no se puede rechazar la hipótesis nula de que las medias de las variables cuantitativas no son significativamente diferentes entre los tratamientos, lo que sugiere que el tratamiento no tiene un impacto claro sobre las variables seleccionadas en este análisis.
+
+# Bibliografía
+
 
 
 

@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -68,6 +34,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="TallerAD_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="TallerAD_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -80,7 +75,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#resumen" id="toc-resumen" class="nav-link active" data-scroll-target="#resumen">RESUMEN</a></li>
-  <li><a href="#planteamiento-del-problema-y-metodologia-a-emplea" id="toc-planteamiento-del-problema-y-metodologia-a-emplea" class="nav-link" data-scroll-target="#planteamiento-del-problema-y-metodologia-a-emplea">Planteamiento del problema y metodología a emplea</a></li>
+  <li><a href="#planteamiento-del-problema-y-metodologia-a-emplear" id="toc-planteamiento-del-problema-y-metodologia-a-emplear" class="nav-link" data-scroll-target="#planteamiento-del-problema-y-metodologia-a-emplear">Planteamiento del problema y metodología a emplear</a></li>
+  <li><a href="#generación-de-datos-y-analisis-descriptivo" id="toc-generación-de-datos-y-analisis-descriptivo" class="nav-link" data-scroll-target="#generación-de-datos-y-analisis-descriptivo">Generación de datos y analisis descriptivo</a>
+  <ul class="collapse">
+  <li><a href="#simulación-de-datos" id="toc-simulación-de-datos" class="nav-link" data-scroll-target="#simulación-de-datos">Simulación de datos</a></li>
+  <li><a href="#análisis-descriptivo" id="toc-análisis-descriptivo" class="nav-link" data-scroll-target="#análisis-descriptivo">Análisis descriptivo</a></li>
+  </ul></li>
+  <li><a href="#Pruebas-estadisticas" id="toc-Pruebas-estadisticas" class="nav-link" data-scroll-target="#Pruebas-estadisticas">Pruebas estadísticas</a>
+  <ul class="collapse">
+  <li><a href="#distribuciones-variables-cuantitativas" id="toc-distribuciones-variables-cuantitativas" class="nav-link" data-scroll-target="#distribuciones-variables-cuantitativas">Distribuciones variables cuantitativas</a></li>
+  <li><a href="#probabilidad-de-tener-un-factor-de-protector" id="toc-probabilidad-de-tener-un-factor-de-protector" class="nav-link" data-scroll-target="#probabilidad-de-tener-un-factor-de-protector">Probabilidad de tener un factor de protector</a></li>
+  <li><a href="#modelo-para-estimar-el-tiempo-de-sobrevida" id="toc-modelo-para-estimar-el-tiempo-de-sobrevida" class="nav-link" data-scroll-target="#modelo-para-estimar-el-tiempo-de-sobrevida">Modelo para estimar el tiempo de sobrevida</a></li>
+  <li><a href="#efectividad-del-tratimiento-en-el-tiempo-de-sobrevida" id="toc-efectividad-del-tratimiento-en-el-tiempo-de-sobrevida" class="nav-link" data-scroll-target="#efectividad-del-tratimiento-en-el-tiempo-de-sobrevida">Efectividad del tratimiento en el tiempo de sobrevida</a></li>
+  </ul></li>
+  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones">Conclusiones</a></li>
+  <li><a href="#bibliografía" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliografía">Bibliografía</a></li>
   </ul>
 </nav>
 </div>
@@ -108,32 +117,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="resumen" class="level1">
 <h1>RESUMEN</h1>
-<p>FALTA</p>
+<p>El Mieloma Múltiple (MM) es un cáncer hematológico que afecta a las células plasmáticas en la médula ósea, resultando en la producción descontrolada de una paraproteína que afecta la función inmunológica del cuerpo. A pesar de la falta de cura, los tratamientos actuales permiten periodos de remisión prolongados. Este informe analiza datos clínicos de 564 pacientes con MM, proporcionados por la Universidad de Arkansas, con el objetivo de explorar el impacto de diversas variables en el tiempo de supervivencia de los pacientes.</p>
+<p>Se generaron datos simulados basados en las variables del conjunto de datos y se realizaron análisis descriptivos y pruebas estadísticas para determinar si las variables seleccionadas siguen distribuciones normales y cómo influyen en la supervivencia. El análisis concluyó que la mayoría de las variables cuantitativas siguen una distribución normal, y el modelo de regresión mostró que la variable <strong>LDH</strong> tiene una relación significativa y negativa con el tiempo de supervivencia. Sin embargo, otras variables como <strong>AGE</strong>, <strong>B2M</strong> y <strong>CRP</strong> no mostraron efectos significativos.</p>
+<p>Además, se analizó la efectividad del tratamiento en el tiempo de supervivencia, utilizando el test de Hotelling para comparar las medias de las variables entre los tratamientos, sin encontrar diferencias significativas. Estos resultados sugieren que, aunque algunas variables pueden estar asociadas con la supervivencia, el modelo no logra explicar completamente la variabilidad del tiempo de supervivencia.</p>
 </section>
-<section id="planteamiento-del-problema-y-metodologia-a-emplea" class="level1">
-<h1>Planteamiento del problema y metodología a emplea</h1>
+<section id="planteamiento-del-problema-y-metodologia-a-emplear" class="level1">
+<h1>Planteamiento del problema y metodología a emplear</h1>
 <p>El Mieloma Múltiple (MM) es un tipo de cáncer que afecta a las células plasmáticas, un tipo de glóbulo blanco que se encuentra en la médula ósea y que son claves en el sistema inmunológico ya que producen anticuerpos.</p>
 <p>En el MM, las células plasmáticas se vuelven anormales y comienzan a multiplicarse de forma descontrolada, produciendo únicamente un tipo de anticuerpo llamado paraproteína o proteína M, que no tiene una función útil en el organismo. Esta paraproteína aumenta progresivamente, desplazando a las otras inmunoglobulinas, cuya producción disminuye. Al reducirse las defensas naturales del cuerpo, el sistema inmunológico se ve debilitado, lo que aumenta la susceptibilidad a infecciones. Generalmente, los síntomas incluyen dolor óseo, debido al daño que produce en los huesos, fatiga, como resultado de la anemia. Otros síntomas son la pérdida de peso, insuficiencia renal y niveles altos de calcio en sangre, lo que puede provocar náuseas, sed excesiva y confusión. Por ahora, no tiene cura, pero sí un tratamiento que permite tener largos períodos de remisión, es decir, sin síntomas.</p>
+<p>En este informe vamos a genearar aleatoriamente diversas variables relacionadas con parámetros clínicos del MM y vamos a realizar algunos contrastes y modelos con el fin de analizar cual es su efecto en el tiempo de sobrevida.</p>
 <p>Los datos con los que vamos a trabjar fueron aportados por la universidad de Arkansas y estan formados por 564 observaciones de las cuales se tomaron 23 variables.</p>
+<p>Aquí se puede observar las variables que contiene la base de datos de Arkansas junto a una pequeña descripción.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="btgzqvlrur" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#btgzqvlrur table {
+<div id="ibqfbshulg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ibqfbshulg table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#btgzqvlrur thead, #btgzqvlrur tbody, #btgzqvlrur tfoot, #btgzqvlrur tr, #btgzqvlrur td, #btgzqvlrur th {
+#ibqfbshulg thead, #ibqfbshulg tbody, #ibqfbshulg tfoot, #ibqfbshulg tr, #ibqfbshulg td, #ibqfbshulg th {
   border-style: none;
 }
 
-#btgzqvlrur p {
+#ibqfbshulg p {
   margin: 0;
   padding: 0;
 }
 
-#btgzqvlrur .gt_table {
+#ibqfbshulg .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -159,12 +172,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_caption {
+#ibqfbshulg .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#btgzqvlrur .gt_title {
+#ibqfbshulg .gt_title {
   color: #333333;
   font-size: 18px;
   font-weight: initial;
@@ -176,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#btgzqvlrur .gt_subtitle {
+#ibqfbshulg .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -188,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#btgzqvlrur .gt_heading {
+#ibqfbshulg .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -200,13 +213,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_bottom_border {
+#ibqfbshulg .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_col_headings {
+#ibqfbshulg .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -221,7 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_col_heading {
+#ibqfbshulg .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -241,7 +254,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#btgzqvlrur .gt_column_spanner_outer {
+#ibqfbshulg .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -253,15 +266,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#btgzqvlrur .gt_column_spanner_outer:first-child {
+#ibqfbshulg .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#btgzqvlrur .gt_column_spanner_outer:last-child {
+#ibqfbshulg .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#btgzqvlrur .gt_column_spanner {
+#ibqfbshulg .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -273,11 +286,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#btgzqvlrur .gt_spanner_row {
+#ibqfbshulg .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#btgzqvlrur .gt_group_heading {
+#ibqfbshulg .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -303,7 +316,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#btgzqvlrur .gt_empty_group_heading {
+#ibqfbshulg .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -318,15 +331,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#btgzqvlrur .gt_from_md > :first-child {
+#ibqfbshulg .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#btgzqvlrur .gt_from_md > :last-child {
+#ibqfbshulg .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#btgzqvlrur .gt_row {
+#ibqfbshulg .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -345,7 +358,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#btgzqvlrur .gt_stub {
+#ibqfbshulg .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -358,7 +371,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#btgzqvlrur .gt_stub_row_group {
+#ibqfbshulg .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -372,15 +385,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#btgzqvlrur .gt_row_group_first td {
+#ibqfbshulg .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#btgzqvlrur .gt_row_group_first th {
+#ibqfbshulg .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#btgzqvlrur .gt_summary_row {
+#ibqfbshulg .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -390,16 +403,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#btgzqvlrur .gt_first_summary_row {
+#ibqfbshulg .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_first_summary_row.thick {
+#ibqfbshulg .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#btgzqvlrur .gt_last_summary_row {
+#ibqfbshulg .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -409,7 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_grand_summary_row {
+#ibqfbshulg .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -419,7 +432,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#btgzqvlrur .gt_first_grand_summary_row {
+#ibqfbshulg .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -429,7 +442,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_last_grand_summary_row_top {
+#ibqfbshulg .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -439,11 +452,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_striped {
+#ibqfbshulg .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#btgzqvlrur .gt_table_body {
+#ibqfbshulg .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -452,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_footnotes {
+#ibqfbshulg .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -466,7 +479,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_footnote {
+#ibqfbshulg .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -475,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#btgzqvlrur .gt_sourcenotes {
+#ibqfbshulg .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -489,7 +502,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#btgzqvlrur .gt_sourcenote {
+#ibqfbshulg .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -497,72 +510,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#btgzqvlrur .gt_left {
+#ibqfbshulg .gt_left {
   text-align: left;
 }
 
-#btgzqvlrur .gt_center {
+#ibqfbshulg .gt_center {
   text-align: center;
 }
 
-#btgzqvlrur .gt_right {
+#ibqfbshulg .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#btgzqvlrur .gt_font_normal {
+#ibqfbshulg .gt_font_normal {
   font-weight: normal;
 }
 
-#btgzqvlrur .gt_font_bold {
+#ibqfbshulg .gt_font_bold {
   font-weight: bold;
 }
 
-#btgzqvlrur .gt_font_italic {
+#ibqfbshulg .gt_font_italic {
   font-style: italic;
 }
 
-#btgzqvlrur .gt_super {
+#ibqfbshulg .gt_super {
   font-size: 65%;
 }
 
-#btgzqvlrur .gt_footnote_marks {
+#ibqfbshulg .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#btgzqvlrur .gt_asterisk {
+#ibqfbshulg .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#btgzqvlrur .gt_indent_1 {
+#ibqfbshulg .gt_indent_1 {
   text-indent: 5px;
 }
 
-#btgzqvlrur .gt_indent_2 {
+#ibqfbshulg .gt_indent_2 {
   text-indent: 10px;
 }
 
-#btgzqvlrur .gt_indent_3 {
+#ibqfbshulg .gt_indent_3 {
   text-indent: 15px;
 }
 
-#btgzqvlrur .gt_indent_4 {
+#ibqfbshulg .gt_indent_4 {
   text-indent: 20px;
 }
 
-#btgzqvlrur .gt_indent_5 {
+#ibqfbshulg .gt_indent_5 {
   text-indent: 25px;
 }
 
-#btgzqvlrur .katex-display {
+#ibqfbshulg .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#btgzqvlrur div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ibqfbshulg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -600,7 +613,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="nombres_variables">ISOTYPE</td>
-<td class="gt_row gt_left" headers="explicacion">Isotipo del paciente ("IgA" , "IgG", "IgM" o "IgE")</td>
+<td class="gt_row gt_left" headers="explicacion">Isotipo del paciente ("IgA" , "IgD", "IgG" o "FLC")</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="nombres_variables">AGE</td>
@@ -676,26 +689,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+</section>
+<section id="generación-de-datos-y-analisis-descriptivo" class="level1">
+<h1>Generación de datos y analisis descriptivo</h1>
+<section id="simulación-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="simulación-de-datos">Simulación de datos</h2>
 <p>Siguiendo las instrucciones de esta entrega, vamos a simular los datos de las siguientes variables, aunque tomaremos la media y la varianza de la muestra tomada en la base de datos Arkansas para evitar resultados inverosimiles.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="wkurlyhrzk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#wkurlyhrzk table {
+<div id="krgzclukff" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#krgzclukff table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#wkurlyhrzk thead, #wkurlyhrzk tbody, #wkurlyhrzk tfoot, #wkurlyhrzk tr, #wkurlyhrzk td, #wkurlyhrzk th {
+#krgzclukff thead, #krgzclukff tbody, #krgzclukff tfoot, #krgzclukff tr, #krgzclukff td, #krgzclukff th {
   border-style: none;
 }
 
-#wkurlyhrzk p {
+#krgzclukff p {
   margin: 0;
   padding: 0;
 }
 
-#wkurlyhrzk .gt_table {
+#krgzclukff .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -721,12 +739,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_caption {
+#krgzclukff .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#wkurlyhrzk .gt_title {
+#krgzclukff .gt_title {
   color: #333333;
   font-size: 18px;
   font-weight: initial;
@@ -738,7 +756,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#wkurlyhrzk .gt_subtitle {
+#krgzclukff .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -750,7 +768,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#wkurlyhrzk .gt_heading {
+#krgzclukff .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -762,13 +780,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_bottom_border {
+#krgzclukff .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_col_headings {
+#krgzclukff .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -783,7 +801,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_col_heading {
+#krgzclukff .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -803,7 +821,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#wkurlyhrzk .gt_column_spanner_outer {
+#krgzclukff .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -815,15 +833,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#wkurlyhrzk .gt_column_spanner_outer:first-child {
+#krgzclukff .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wkurlyhrzk .gt_column_spanner_outer:last-child {
+#krgzclukff .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wkurlyhrzk .gt_column_spanner {
+#krgzclukff .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -835,11 +853,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#wkurlyhrzk .gt_spanner_row {
+#krgzclukff .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#wkurlyhrzk .gt_group_heading {
+#krgzclukff .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -865,7 +883,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#wkurlyhrzk .gt_empty_group_heading {
+#krgzclukff .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -880,15 +898,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#wkurlyhrzk .gt_from_md > :first-child {
+#krgzclukff .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wkurlyhrzk .gt_from_md > :last-child {
+#krgzclukff .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wkurlyhrzk .gt_row {
+#krgzclukff .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -907,7 +925,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#wkurlyhrzk .gt_stub {
+#krgzclukff .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -920,7 +938,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#wkurlyhrzk .gt_stub_row_group {
+#krgzclukff .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -934,15 +952,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#wkurlyhrzk .gt_row_group_first td {
+#krgzclukff .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#wkurlyhrzk .gt_row_group_first th {
+#krgzclukff .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#wkurlyhrzk .gt_summary_row {
+#krgzclukff .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -952,16 +970,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#wkurlyhrzk .gt_first_summary_row {
+#krgzclukff .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_first_summary_row.thick {
+#krgzclukff .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#wkurlyhrzk .gt_last_summary_row {
+#krgzclukff .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -971,7 +989,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_grand_summary_row {
+#krgzclukff .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -981,7 +999,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#wkurlyhrzk .gt_first_grand_summary_row {
+#krgzclukff .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -991,7 +1009,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_last_grand_summary_row_top {
+#krgzclukff .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1001,11 +1019,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_striped {
+#krgzclukff .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wkurlyhrzk .gt_table_body {
+#krgzclukff .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1014,7 +1032,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_footnotes {
+#krgzclukff .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1028,7 +1046,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_footnote {
+#krgzclukff .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1037,7 +1055,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#wkurlyhrzk .gt_sourcenotes {
+#krgzclukff .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1051,7 +1069,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#wkurlyhrzk .gt_sourcenote {
+#krgzclukff .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1059,72 +1077,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#wkurlyhrzk .gt_left {
+#krgzclukff .gt_left {
   text-align: left;
 }
 
-#wkurlyhrzk .gt_center {
+#krgzclukff .gt_center {
   text-align: center;
 }
 
-#wkurlyhrzk .gt_right {
+#krgzclukff .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wkurlyhrzk .gt_font_normal {
+#krgzclukff .gt_font_normal {
   font-weight: normal;
 }
 
-#wkurlyhrzk .gt_font_bold {
+#krgzclukff .gt_font_bold {
   font-weight: bold;
 }
 
-#wkurlyhrzk .gt_font_italic {
+#krgzclukff .gt_font_italic {
   font-style: italic;
 }
 
-#wkurlyhrzk .gt_super {
+#krgzclukff .gt_super {
   font-size: 65%;
 }
 
-#wkurlyhrzk .gt_footnote_marks {
+#krgzclukff .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#wkurlyhrzk .gt_asterisk {
+#krgzclukff .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#wkurlyhrzk .gt_indent_1 {
+#krgzclukff .gt_indent_1 {
   text-indent: 5px;
 }
 
-#wkurlyhrzk .gt_indent_2 {
+#krgzclukff .gt_indent_2 {
   text-indent: 10px;
 }
 
-#wkurlyhrzk .gt_indent_3 {
+#krgzclukff .gt_indent_3 {
   text-indent: 15px;
 }
 
-#wkurlyhrzk .gt_indent_4 {
+#krgzclukff .gt_indent_4 {
   text-indent: 20px;
 }
 
-#wkurlyhrzk .gt_indent_5 {
+#krgzclukff .gt_indent_5 {
   text-indent: 25px;
 }
 
-#wkurlyhrzk .katex-display {
+#krgzclukff .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#wkurlyhrzk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#krgzclukff div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1132,49 +1150,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="header gt_heading">
-<th colspan="2" class="gt_heading gt_title gt_font_normal gt_bottom_border">Variables simuladas</th>
+<th colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border">Variables simuladas</th>
 </tr>
 <tr class="odd gt_col_headings">
 <th id="nombres_variables" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Variable</th>
-<th id="explicacion" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Explicación</th>
+<th id="tipo_variable" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Tipo Variable</th>
+<th id="posibles_valores" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Posibles valores</th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="nombres_variables">AGE</td>
-<td class="gt_row gt_left" headers="explicacion">Cuantitativa</td>
+<td class="gt_row gt_left" headers="tipo_variable">Cuantitativa</td>
+<td class="gt_row gt_left" headers="posibles_valores">Valores positivos</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="nombres_variables">B2M</td>
-<td class="gt_row gt_left" headers="explicacion">Cuantitativa</td>
+<td class="gt_row gt_left" headers="tipo_variable">Cuantitativa</td>
+<td class="gt_row gt_left" headers="posibles_valores">Valores positivos</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="nombres_variables">CRP</td>
-<td class="gt_row gt_left" headers="explicacion">Cuantitativa</td>
+<td class="gt_row gt_left" headers="tipo_variable">Cuantitativa</td>
+<td class="gt_row gt_left" headers="posibles_valores">Valores positivos</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="nombres_variables">LDH</td>
-<td class="gt_row gt_left" headers="explicacion">Cuantitativa</td>
+<td class="gt_row gt_left" headers="tipo_variable">Cuantitativa</td>
+<td class="gt_row gt_left" headers="posibles_valores">Valores positivos</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="nombres_variables">ALB</td>
-<td class="gt_row gt_left" headers="explicacion">Ordinal: Bajo, Normal, Alto</td>
+<td class="gt_row gt_left" headers="tipo_variable">Ordinal</td>
+<td class="gt_row gt_left" headers="posibles_valores">Bajo, Normal, Alto</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="nombres_variables">HGB</td>
-<td class="gt_row gt_left" headers="explicacion">Ordinal: Bajo, Normal, Alto</td>
+<td class="gt_row gt_left" headers="tipo_variable">Ordinal</td>
+<td class="gt_row gt_left" headers="posibles_valores">Bajo, Normal, Alto</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="nombres_variables">CREAT</td>
-<td class="gt_row gt_left" headers="explicacion">Ordinal: Bajo, Normal, Alto</td>
+<td class="gt_row gt_left" headers="tipo_variable">Ordinal</td>
+<td class="gt_row gt_left" headers="posibles_valores">Bajo, Normal, Alto</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="nombres_variables">SEX</td>
-<td class="gt_row gt_left" headers="explicacion">Nominal: Hombre, Mujer</td>
+<td class="gt_row gt_left" headers="tipo_variable">Nominal</td>
+<td class="gt_row gt_left" headers="posibles_valores">Hombre, Mujer</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="nombres_variables">PROT</td>
-<td class="gt_row gt_left" headers="explicacion">Nominal: TA, TB</td>
+<td class="gt_row gt_left" headers="tipo_variable">Nominal</td>
+<td class="gt_row gt_left" headers="posibles_valores">Tratamiento A, Tratamiento B</td>
 </tr>
 </tbody>
 </table>
@@ -1182,191 +1210,184 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>Ahora, de la base de datos Arkansas, seleccionamos 150 observaciones y nos quedamos con las variables OS_time y ISOTYPE. Estas las unimos a las observaciones simuladas anteriormente para así tener un única base de datos.</p>
+</section>
+<section id="análisis-descriptivo" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-descriptivo">Análisis descriptivo</h2>
+<p>Si realizamos un histograma de las variablas cuantitativas, obserservamos como todas las gráficas estan centradas sobre la media y presentan una curva similar a la normal. Quizás, la gráfica de LDH puede presentar una distribución distinta. En la siguiente sección, <a href="#Pruebas-estadisticas">Pruebas estadísticas</a>, analizaremos si realmente las variables se ajustan a una distribución normal.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>medias <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">mean</span>(Arkansas<span class="sc">$</span>AGE, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mean</span>(Arkansas<span class="sc">$</span>B2M, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mean</span>(Arkansas<span class="sc">$</span>CRP, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mean</span>(Arkansas<span class="sc">$</span>LDH, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>Arkansas_sub <span class="ot">&lt;-</span> Arkansas <span class="sc">%&gt;%</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(AGE, B2M, CRP, LDH) <span class="sc">%&gt;%</span> <span class="co"># Seleccionamos las variables que queremos estudiar</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()  </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular la matriz de covarianza</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>covarianza <span class="ot">&lt;-</span> <span class="fu">cov</span>(Arkansas_sub)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>datos_cuantitativos <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="dv">150</span>, <span class="at">mu =</span> medias, <span class="at">Sigma =</span> covarianza)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>datos_mieloma <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">AGE =</span> <span class="fu">round</span>(datos_cuantitativos[,<span class="dv">1</span>]),</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">B2M =</span> <span class="fu">round</span>(datos_cuantitativos[,<span class="dv">2</span>], <span class="dv">1</span>),</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">CRP =</span> <span class="fu">round</span>(datos_cuantitativos[,<span class="dv">3</span>], <span class="dv">1</span>),</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">LDH =</span> <span class="fu">round</span>(datos_cuantitativos[,<span class="dv">4</span>]),</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">SEX =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>), <span class="dv">150</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">PROT =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Tratamiento A"</span>, <span class="st">"Tratamiento B"</span>), <span class="dv">150</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">ALB =</span> <span class="fu">ordered</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Bajo"</span>, <span class="st">"Normal"</span>, <span class="st">"Alto"</span>), <span class="dv">150</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)),</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">HGB =</span> <span class="fu">ordered</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Bajo"</span>, <span class="st">"Normal"</span>, <span class="st">"Alto"</span>), <span class="dv">150</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)),</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">CREAT =</span> <span class="fu">ordered</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Bajo"</span>, <span class="st">"Medio"</span>, <span class="st">"Alto"</span>), <span class="dv">150</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>datos_mieloma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TallerAD_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Para la variable OS_time, realizaremos una gráfica de su densidad y así observar su posible distribución.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TallerAD_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Para las variables ordinales y nominales, realizaremos un diagrama de barras agrupadas y, además, una tabla donde aparecen las frecuencias. En este observamos como todas las variables tienen aproximadamente el mismo número de observaciones para cada nivel, a exepción, quizá del número de observaciones con niveles de HGB altos.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TallerAD_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>    AGE  B2M   CRP LDH    SEX          PROT    ALB    HGB CREAT
-1    63 11.5  27.9 105  Mujer Tratamiento A   Alto   Bajo  Alto
-2    52 -1.1  10.1 141  Mujer Tratamiento A   Bajo Normal Medio
-3    54  7.2 -34.0 182 Hombre Tratamiento B   Bajo   Alto  Alto
-4    66 17.3 -11.8 188 Hombre Tratamiento A Normal Normal Medio
-5    73  1.7  20.3  94 Hombre Tratamiento A   Alto   Alto  Alto
-6    62  1.1  61.6  81  Mujer Tratamiento A   Alto Normal Medio
-7    56  1.3   2.5 137 Hombre Tratamiento A   Bajo   Bajo  Bajo
-8    64  1.9  18.2 180 Hombre Tratamiento A   Bajo Normal  Bajo
-9    58 13.3  31.3 252  Mujer Tratamiento A   Bajo   Alto Medio
-10   70  0.4  12.0 247 Hombre Tratamiento B   Alto Normal Medio
-11   61  1.9 -12.9 285 Hombre Tratamiento A   Alto Normal Medio
-12   45 -0.5   9.3 141 Hombre Tratamiento A   Bajo   Bajo  Bajo
-13   42 -0.6   7.4 116 Hombre Tratamiento B Normal   Bajo Medio
-14   49 -4.1 -19.7 155 Hombre Tratamiento A   Bajo   Alto  Alto
-15   84 19.9  35.5 388 Hombre Tratamiento A Normal   Bajo  Alto
-16   53  5.3  24.5 181 Hombre Tratamiento A   Alto   Bajo  Alto
-17   57  4.8  13.8 234 Hombre Tratamiento B Normal   Alto  Alto
-18   58 -1.2  42.6 139  Mujer Tratamiento A   Bajo   Alto Medio
-19   68 -3.6  -3.1 280 Hombre Tratamiento A   Alto   Alto Medio
-20   51  7.5 -20.2 309  Mujer Tratamiento A Normal   Bajo Medio
-21   47 -1.3  12.9  95  Mujer Tratamiento A   Bajo   Bajo  Bajo
-22   59  5.0  -7.9 152  Mujer Tratamiento B   Bajo   Alto  Alto
-23   60  6.2  15.4 102 Hombre Tratamiento B   Bajo Normal Medio
-24   51  4.4   8.7 186  Mujer Tratamiento A Normal   Bajo  Bajo
-25   82  7.9   1.7 146 Hombre Tratamiento B   Bajo   Bajo  Bajo
-26   56  5.4  -2.6 276 Hombre Tratamiento B Normal Normal Medio
-27   47  3.2 -11.7 181 Hombre Tratamiento B   Alto   Bajo Medio
-28   63  8.6   4.6 126 Hombre Tratamiento B Normal   Alto  Alto
-29   38  7.2   8.5 309  Mujer Tratamiento B   Alto   Alto  Alto
-30   54  1.3  19.5 178  Mujer Tratamiento B Normal Normal Medio
-31   58  4.1   5.8 268 Hombre Tratamiento B   Bajo   Bajo  Alto
-32   51  7.5   8.2 194 Hombre Tratamiento B   Alto Normal  Alto
-33   69  9.8   1.1 206 Hombre Tratamiento B Normal Normal Medio
-34   53  0.5  18.1  91 Hombre Tratamiento B   Alto Normal Medio
-35   67 11.6  21.1 204 Hombre Tratamiento B Normal   Alto  Bajo
-36   43  0.4  -4.8 147 Hombre Tratamiento A   Bajo   Bajo  Bajo
-37   70  6.3  -9.5 151 Hombre Tratamiento A   Bajo   Alto  Alto
-38   38  2.2  21.1 204  Mujer Tratamiento B   Alto Normal Medio
-39   57  8.6  27.3 209 Hombre Tratamiento B   Alto Normal  Bajo
-40   62 -1.0   0.3 144  Mujer Tratamiento B   Bajo   Bajo  Alto
-41   51  5.6  27.4 229 Hombre Tratamiento B   Alto   Alto Medio
-42   42  4.8  31.6 170 Hombre Tratamiento B   Alto   Bajo  Alto
-43   60  2.1  -1.6 140 Hombre Tratamiento A Normal   Bajo Medio
-44   57  3.1 -19.3  42  Mujer Tratamiento B   Alto Normal  Alto
-45   64 10.3  -7.1 253 Hombre Tratamiento A Normal   Alto Medio
-46   72  4.9  -0.4 164 Hombre Tratamiento B Normal Normal  Alto
-47   46  5.5 -14.5 152 Hombre Tratamiento A   Alto   Bajo  Alto
-48   62 -0.9  -1.1 128  Mujer Tratamiento A   Alto   Bajo  Alto
-49   45  9.3 -36.2 133 Hombre Tratamiento A   Alto   Bajo  Alto
-50   70  2.6  36.2  40 Hombre Tratamiento B   Bajo   Alto  Bajo
-51   54  0.7  14.6 209  Mujer Tratamiento A Normal   Alto  Bajo
-52   64  9.9   6.2 223 Hombre Tratamiento A   Alto   Alto  Alto
-53   64  2.5  30.0 213  Mujer Tratamiento B   Alto Normal  Alto
-54   50  4.8  13.0 240  Mujer Tratamiento B   Alto   Alto  Bajo
-55   39 -9.5  -3.9 219 Hombre Tratamiento B   Alto   Alto  Bajo
-56   52 11.0  38.2 265  Mujer Tratamiento A   Alto   Bajo  Alto
-57   63 16.5  20.7 111  Mujer Tratamiento B Normal Normal  Bajo
-58   66 -3.8  10.4 188 Hombre Tratamiento A   Alto   Bajo  Bajo
-59   68  4.7 -10.7 106  Mujer Tratamiento B Normal Normal  Bajo
-60   46  9.2   3.2 174  Mujer Tratamiento B   Bajo   Bajo  Bajo
-61   55  3.1  16.5  65 Hombre Tratamiento B   Alto Normal  Bajo
-62   62  1.6  -3.6 115  Mujer Tratamiento B   Bajo   Alto  Alto
-63   49  9.0  19.3 135 Hombre Tratamiento B Normal   Alto  Alto
-64   51  1.4  63.5 156  Mujer Tratamiento A   Alto   Alto  Bajo
-65   61  6.1  -9.6  63 Hombre Tratamiento B   Alto   Bajo  Bajo
-66   52  8.6   4.4 181 Hombre Tratamiento A   Bajo   Bajo Medio
-67   59 10.0   8.4 305  Mujer Tratamiento B Normal Normal  Bajo
-68   58  5.8  -2.3 125 Hombre Tratamiento A Normal Normal  Alto
-69   63  6.6  20.3 138  Mujer Tratamiento B   Alto   Bajo  Bajo
-70   49 16.8   1.5 314 Hombre Tratamiento B   Alto Normal Medio
-71   73 10.3  17.8  95 Hombre Tratamiento B   Bajo Normal  Bajo
-72   53  6.8 -10.9 254  Mujer Tratamiento A Normal   Alto Medio
-73   53  8.1   7.2 152  Mujer Tratamiento B   Alto   Bajo Medio
-74   55 15.2  12.1 166 Hombre Tratamiento A   Bajo Normal  Bajo
-75   57  6.6   9.9 159  Mujer Tratamiento B Normal   Alto Medio
-76   57 -4.3   9.0 193  Mujer Tratamiento A Normal   Alto Medio
-77   54  9.4   5.4  77 Hombre Tratamiento A Normal Normal  Alto
-78   53 -1.0  -0.7 127 Hombre Tratamiento A   Alto   Bajo  Alto
-79   80  4.4  22.0 240  Mujer Tratamiento A   Bajo   Bajo  Alto
-80   49  1.6  -0.3 172 Hombre Tratamiento B Normal   Bajo  Alto
-81   58  9.7  -8.0 256 Hombre Tratamiento B   Bajo Normal  Alto
-82   54  9.2  -6.9 107  Mujer Tratamiento A Normal   Alto  Bajo
-83   59  5.7  11.1 114  Mujer Tratamiento B Normal   Bajo Medio
-84   58  3.5  28.0 288 Hombre Tratamiento A Normal   Alto  Bajo
-85   72  5.0  11.4 162 Hombre Tratamiento B Normal Normal  Bajo
-86   62 -7.0   4.5  98  Mujer Tratamiento A   Bajo Normal Medio
-87   42  4.2  13.7 184  Mujer Tratamiento B Normal   Alto  Bajo
-88   64 10.8  22.5 188 Hombre Tratamiento A   Bajo Normal Medio
-89   55 14.7  10.9 188  Mujer Tratamiento B Normal   Alto  Alto
-90   69  5.0  24.8 116 Hombre Tratamiento B   Alto   Alto  Bajo
-91   57 11.9  13.5 253  Mujer Tratamiento B Normal   Bajo  Alto
-92   64  7.8  -6.8 208  Mujer Tratamiento A Normal   Alto  Alto
-93   66  3.5 -10.9 221  Mujer Tratamiento A   Alto Normal  Alto
-94   46  7.8 -14.0 128  Mujer Tratamiento A Normal   Bajo  Alto
-95   70  8.5  26.0 134 Hombre Tratamiento B Normal   Bajo  Bajo
-96   63 -2.6 -13.6 312 Hombre Tratamiento B Normal   Alto  Bajo
-97   54  2.3  28.7 248  Mujer Tratamiento A Normal   Alto Medio
-98   55  9.3  12.6 250  Mujer Tratamiento A Normal Normal  Bajo
-99   44  6.4  33.2 172 Hombre Tratamiento A Normal Normal  Bajo
-100  55  3.1   2.6  95 Hombre Tratamiento A Normal Normal Medio
-101  76 -0.7 -33.1  28 Hombre Tratamiento A   Bajo   Alto  Alto
-102  65  2.8   6.0 143  Mujer Tratamiento A   Alto Normal  Alto
-103  59  0.7 -13.5 104 Hombre Tratamiento A Normal   Bajo  Bajo
-104  49  5.2  16.2 163 Hombre Tratamiento B Normal   Bajo  Bajo
-105  66  8.0  12.9 256 Hombre Tratamiento A Normal   Bajo Medio
-106  38  2.3  39.9 144 Hombre Tratamiento A Normal Normal  Alto
-107  58 14.3   9.3 185 Hombre Tratamiento A Normal   Alto  Alto
-108  57 -4.6   8.9  95  Mujer Tratamiento B Normal Normal Medio
-109  60  6.8   3.8 210  Mujer Tratamiento A   Bajo   Bajo  Bajo
-110  64  4.8  39.7 246  Mujer Tratamiento B   Alto   Alto Medio
-111  71  0.4  23.1 257 Hombre Tratamiento B   Alto   Alto  Bajo
-112  59 -6.6  12.7  97 Hombre Tratamiento B Normal   Bajo Medio
-113  65  9.3   4.9 219 Hombre Tratamiento A   Alto   Bajo  Bajo
-114  64  6.7  26.1 172  Mujer Tratamiento B   Alto   Alto  Alto
-115  63 17.3  63.1 209 Hombre Tratamiento B   Bajo Normal  Bajo
-116  58  4.8   9.5 294  Mujer Tratamiento A   Bajo Normal  Alto
-117  47  2.6  10.3  44 Hombre Tratamiento A   Bajo   Alto  Alto
-118  50  0.0  -5.1 138  Mujer Tratamiento A Normal Normal  Bajo
-119  42  2.1   2.7 190 Hombre Tratamiento A Normal   Alto Medio
-120  62 13.7 -11.4 113 Hombre Tratamiento A Normal   Alto  Alto
-121  40  8.0  -4.4 191  Mujer Tratamiento B   Alto Normal  Bajo
-122  72 12.0  16.4 193  Mujer Tratamiento B   Alto   Alto Medio
-123  57  2.7  44.3 256 Hombre Tratamiento B Normal Normal Medio
-124  52 13.2  27.9 183  Mujer Tratamiento A Normal   Bajo  Alto
-125  66  1.4   4.5 220 Hombre Tratamiento B Normal Normal Medio
-126  55 -3.9  11.2 170 Hombre Tratamiento A Normal   Bajo  Bajo
-127  71 10.9  28.9 242 Hombre Tratamiento B   Alto   Alto  Alto
-128  44  6.7  47.7 242  Mujer Tratamiento B Normal Normal  Alto
-129  65  0.8  32.7 208  Mujer Tratamiento A   Bajo Normal  Bajo
-130  70 13.6  10.7 137  Mujer Tratamiento A   Bajo Normal  Bajo
-131  76 13.9   3.5 237 Hombre Tratamiento A   Alto   Bajo  Bajo
-132  71  1.4   6.4 163  Mujer Tratamiento A   Alto   Alto  Alto
-133  65 15.3 -11.7 217  Mujer Tratamiento B Normal Normal Medio
-134  48  8.5   6.9 170  Mujer Tratamiento A   Alto   Alto  Alto
-135  67 -0.7  -8.9  60 Hombre Tratamiento B   Alto Normal  Alto
-136  67  6.0  23.5 227  Mujer Tratamiento A   Alto Normal  Alto
-137  42  4.2  32.9 250  Mujer Tratamiento B Normal   Bajo Medio
-138  48  8.5   7.3 137  Mujer Tratamiento A   Alto Normal  Bajo
-139  52 -6.8 -10.8 152  Mujer Tratamiento B Normal   Bajo  Alto
-140  58 -5.1 -35.1 196  Mujer Tratamiento B   Alto   Alto  Bajo
-141  51  4.1  21.9 134  Mujer Tratamiento B   Bajo   Alto  Bajo
-142  71 13.6   2.3 256  Mujer Tratamiento B Normal   Alto Medio
-143  54 11.4 -16.4 227 Hombre Tratamiento A   Alto   Bajo  Bajo
-144  53  0.3  10.5  55 Hombre Tratamiento A Normal Normal Medio
-145  62  5.7   0.4 115  Mujer Tratamiento B   Alto   Bajo  Bajo
-146  53  4.8  -5.9 124 Hombre Tratamiento B Normal   Bajo  Bajo
-147  45  2.5 -22.8  58 Hombre Tratamiento B   Alto   Alto  Bajo
-148  53 -2.9  34.8 161  Mujer Tratamiento B Normal   Bajo  Bajo
-149  59  2.4  31.5 112  Mujer Tratamiento A   Alto   Bajo  Bajo
-150  53  4.9   3.4 102  Mujer Tratamiento B   Alto   Bajo  Bajo</code></pre>
+<pre><code># A tibble: 3 × 4
+  Nivel    ALB CREAT   HGB
+  &lt;ord&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt;
+1 Bajo      53    55    53
+2 Normal    48    44    57
+3 Alto      49    51    40</code></pre>
 </div>
 </div>
+<p>Por último, si analizamos las variables nominales SEX y ISOTYPE, observamos como hay aproximadamente el mismo número de observaciones para ambos sexos. Por el contrario, en la variable ISOTYPE, observamos como hay una gran disparidad entre los diferentes isotipos. En este caso, el isotipo <em>IgD</em> no estaría representado en esta muestra.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TallerAD_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TallerAD_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Para terminar, realizaremos un mapa de correlación</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TallerAD_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La mayoría de las correlaciones en esta matriz son débiles o muy débiles, con la excepción de la relación entre CRP y LDH, que es la más fuerte, aunque aún se considera moderada. Esto sugiere que, en general, las variables en esta matriz no están fuertemente relacionadas entre sí en el conjunto de datos.</p>
+</section>
+</section>
+<section id="Pruebas-estadisticas" class="level1">
+<h1>Pruebas estadísticas</h1>
+<section id="distribuciones-variables-cuantitativas" class="level2">
+<h2 class="anchored" data-anchor-id="distribuciones-variables-cuantitativas">Distribuciones variables cuantitativas</h2>
+<p>Comprobemos si las variables B2M, AGE,CRP, LDH y OS_Time siguen una distribución normal. Para ello, realizaremos el test de Shapiro-Wilks, que realiza el contraste</p>
+<p><span class="math display">\[
+\begin{cases}
+  H_0: \text{Los datos siguen una distribución normal} \\
+  H_1: \text{Los datos no siguen una distribución normal}
+\end{cases}
+\]</span></p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>       B2M        AGE        CRP        LDH    OS_Time 
+0.12063554 0.33348349 0.61316723 0.74107711 0.09061219 </code></pre>
+</div>
+</div>
+<p>Observamos que todos los p-valores son superiores a 0.05, por lo que no se rechaza la hipotesis nula.</p>
+<p>En conlusión, todas las variables siguen una distribución normal.</p>
+</section>
+<section id="probabilidad-de-tener-un-factor-de-protector" class="level2">
+<h2 class="anchored" data-anchor-id="probabilidad-de-tener-un-factor-de-protector">Probabilidad de tener un factor de protector</h2>
+<p>En otros análisis se haobservado como aquellas personas con el isotipo <em>FLC</em> tienen un mayor tiempo de sobrevida. Por eso, veamos cual es la probabilidad de que esto ocurra.</p>
+<p>Calculamos la tabla de frecuencias, posteriormente las probabilidades y para acabar</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+FLC IgA IgD IgG 
+ 25  42   1  82 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+        FLC         IgA         IgD         IgG 
+0.166666667 0.280000000 0.006666667 0.546666667 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9739159</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-para-estimar-el-tiempo-de-sobrevida" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-para-estimar-el-tiempo-de-sobrevida">Modelo para estimar el tiempo de sobrevida</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>            Coeficiente_Beta Error_Estandar t_valor      P_valor
+(Intercept)         42.70582       12.49076   3.419 0.0008163184
+AGE                  0.09633        0.18648   0.517 0.6062360622
+B2M                  0.19308        0.30032   0.643 0.5212827826
+CRP                  0.12896        0.09588   1.345 0.1807278888
+LDH                 -0.05930        0.02854  -2.078 0.0394952796</code></pre>
+</div>
+</div>
+<p>Analizando las variables en el modelo lineal obtenemos que</p>
+<p>AGE: Su coeficiente es 0.096, lo que indica que por cada año adicional, el tiempo de sobrevida aumenta ligeramente en promedio, pero no de manera significativa (valor p = 0.606).</p>
+<p>B2M: Un aumento de una unidad en B2M implica un aumento de tiempo de sobrevida, aunque tampoco es significativo (p = 0.521).</p>
+<p>CRP: Su coeficiente es 0.128, lo que sugiere un incremento en el tiempo de sobrevida por cada unidad adicional, pero de nuevo, esta relación no es estadísticamente significativa (p = 0.180).</p>
+<p>LDH: Un aumento en LDH se asocia con una disminución en el tiempo de sobrevida general (coeficiente de -0.059), y esta relación sí es significativa (p = 0.039), indicando que LDH es un predictor relevante para el tiempo de sobrevida.</p>
+<p>Además, si obseravamos el R-cuadrado ajustado este tiene un valor muy bajo, lo que indica que la explicabilidad del modelo es bajo.</p>
+<p>En conclusión, el modelo no muestra una relación estadísticamente significativa en general entre las variables predictoras y OS_Time. Aunque la variable LDH presenta una relación significativa y negativa, el bajo valor de <span class="math inline">\(R^2\)</span> sugiere que estas variables predictoras no explican bien la variabilidad en el tiempo de supervivencia.</p>
+</section>
+<section id="efectividad-del-tratimiento-en-el-tiempo-de-sobrevida" class="level2">
+<h2 class="anchored" data-anchor-id="efectividad-del-tratimiento-en-el-tiempo-de-sobrevida">Efectividad del tratimiento en el tiempo de sobrevida</h2>
+<p>Analizemos si existen diferencias entre el vector de medias multivariado de la variables cuantitativas anteriormente generadas (B2M, AGE, CRP, LDH) de la población que ha recibido diferente tratamiento. Para ello, vamos a realizar un test de Hotelling, primero usando la función de R y luego calculado el estadístico manualmente. Este test realiza el siguiente contraste:</p>
+<p><span class="math display">\[
+\begin{cases}
+H_0 : \boldsymbol{\mu}_A = \boldsymbol{\mu}_B \\
+H_1 : \boldsymbol{\mu}_A \neq \boldsymbol{\mu}_B
+\end{cases}
+\]</span></p>
+<p>Test realizado con la función de R:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Test stat:  5.2464 
+Numerator df:  5 
+Denominator df:  144 
+P-value:  0.4076 </code></pre>
+</div>
+</div>
+<p>Test realizado a mano:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  T2[,1] F_value[,1] p_value[,1]
+   &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+1   5.25        1.02       0.408</code></pre>
+</div>
+</div>
+<p>Observamos que obtenemos un p-valor alto, 0.4076, por lo que no podemos rechazar la hipotesis nula de que el vector de medias sean distintos para los diferentes tratamientos.</p>
+</section>
+</section>
+<section id="conclusiones" class="level1">
+<h1>Conclusiones</h1>
+<p>En este análisis de datos sobre el Mieloma Múltiple (MM), se ha explorado el impacto de varias variables clínicas sobre el tiempo de supervivencia de los pacientes, utilizando datos de la Universidad de Arkansas y simulaciones adicionales.</p>
+<ol type="1">
+<li><p><strong>Distribución normal</strong>: Las pruebas realizadas con el test de Shapiro-Wilk indican que las variables cuantitativas <strong>B2M, AGE, CRP, LDH</strong> y <strong>OS_Time</strong> siguen una distribución normal, ya que todos los valores p fueron mayores a 0.05, lo que nos permitió no rechazar la hipótesis nula de normalidad.</p></li>
+<li><p><strong>Relación entre variables</strong>: A través del análisis de correlación, se observa que la mayoría de las variables están débilmente correlacionadas entre sí, con la excepción de <strong>CRP</strong> y <strong>LDH</strong>, cuya relación moderada sugiere una posible interdependencia clínica entre estas dos variables.</p></li>
+<li><p><strong>Efecto de las variables en el tiempo de supervivencia</strong>: Al analizar un modelo de regresión lineal para estimar el tiempo de supervivencia, se concluye que <strong>LDH</strong> es la única variable con una relación estadísticamente significativa y negativa con el tiempo de supervivencia (p = 0.039), lo que indica que a medida que aumenta el valor de LDH, el tiempo de supervivencia tiende a disminuir. Las demás variables, como <strong>AGE</strong>, <strong>B2M</strong> y <strong>CRP</strong>, no muestran una relación significativa con el tiempo de supervivencia.</p></li>
+<li><p><strong>Tratamiento y tiempo de supervivencia</strong>: El análisis sobre el efecto del tratamiento (<strong>PROT</strong>) sobre las variables cuantitativas no muestra diferencias significativas entre los tratamientos cuando se evalúa el vector de medias multivariado utilizando el test de Hotelling. El p-valor alto (0.4076) indica que no se puede rechazar la hipótesis nula de que las medias de las variables cuantitativas no son significativamente diferentes entre los tratamientos, lo que sugiere que el tratamiento no tiene un impacto claro sobre las variables seleccionadas en este análisis.</p></li>
+</ol>
+</section>
+<section id="bibliografía" class="level1">
+<h1>Bibliografía</h1>
 </section>
 
 </main>
