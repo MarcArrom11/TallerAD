@@ -1,6 +1,7 @@
 ---
-title: "Taller evaluado de repaso para el Primer Parcial"
-subtitle: "20582- Análisis de Datos para el GMAT"
+title: "Análisis de Factores Predictivos en la Supervivencia de Pacientes con Mieloma Múltiple"
+subtitle: "Taller evaluado de repaso para el Primer Parcial"
+author: "Marc Arrom Esquembre" 
 format:
   html:
     theme: lumen
@@ -26,28 +27,34 @@ En el MM, las células plasmáticas se vuelven anormales y comienzan a multiplic
 Generalmente, los síntomas incluyen dolor óseo, debido al daño que produce en los huesos, fatiga, como resultado de la anemia. Otros síntomas son la pérdida de peso, insuficiencia renal y niveles altos de calcio en sangre, lo que puede provocar náuseas, sed excesiva y confusión.
 Por ahora, no tiene cura, pero sí un tratamiento que permite tener largos períodos de remisión, es decir, sin síntomas.
 
+En este informe vamos a generar aleatoriamente diversas variables relacionadas con parámetros clínicos del MM y vamos a realizar algunos contrastes y modelos con el fin de analizar cual es su efecto en el tiempo de sobrevida.
 
-
-En este informe vamos a genearar aleatoriamente diversas variables relacionadas con parámetros clínicos del MM y vamos a realizar algunos contrastes y modelos con el fin de analizar cual es su efecto en el tiempo de sobrevida.
-
-Los datos con los que vamos a trabjar fueron aportados por la universidad de Arkansas y estan formados por 564 observaciones de las cuales se tomaron 23 variables.
+Los datos con los que vamos a trabajar fueron aportados por la universidad de Arkansas y están formados por 564 observaciones de las cuales se tomaron 23 variables.
 
 
 
 ```{r LIBRERIAS, echo = FALSE, warning=FALSE, message=FALSE}
-library(tidyverse)
-library(readxl)
-library(survival)
-library(survminer)
-library(xtable)
-library(kableExtra)
-library(gt) # Para una mejor visulización de las tablas
-library(gridExtra) # Para poner gráficos uno al lado del otro
-library(ggcorrplot) # Para la creación del gráfico de correlación
-library(dplyr)
-library(Hotelling)
-library(scales)
-library(MASS)
+# Librerías para el análisis y manipulación de datos
+library(tidyverse)    # Conjunto de paquetes (incluyendo ggplot2, dplyr, tidyr) para la manipulación, visualización y análisis de datos
+library(dplyr)        # Parte de tidyverse, para la manipulación de datos, incluyendo filtrado, selección y agregación de datos
+
+# Librerías para leer y trabajar con archivos
+library(readxl)       # Para leer archivos Excel directamente en R, útil cuando los datos provienen de esta fuente
+
+# Librerías para la visualización y personalización de tablas
+library(xtable)       # Convierte tablas en formato LaTeX o HTML, útil para exportar resultados
+library(kableExtra)   # Extiende kable para dar formato a tablas, agregando colores, bordes, entre otros
+library(gt)           # Facilita la creación de tablas personalizadas y mejoradas visualmente
+
+# Librerías para visualización avanzada de gráficos
+library(ggcorrplot)   # Especialmente para gráficos de correlación, mostrando la matriz de correlación de forma visual
+library(gridExtra)    # Organiza y coloca múltiples gráficos en una sola vista, útil para comparar gráficos
+
+# Librerías para análisis estadístico y pruebas
+library(Hotelling)    # Realiza el test de Hotelling, usado en el análisis de medias multivariadas entre grupos
+library(scales)       # Proporciona funciones para escalar gráficos, formatear ejes y ajustar visualización
+library(MASS)         # Incluye métodos y funciones estadísticas avanzadas, como regresiones y generación de datos simulados
+
 ```
 
 
@@ -129,7 +136,7 @@ tabla_visualizacion_variables
 # Generación de datos y analisis descriptivo
 
 ## Simulación de datos
-Siguiendo las instrucciones de esta entrega, vamos a simular los datos de las siguientes variables, aunque tomaremos la media y la varianza de la muestra tomada en la base de datos Arkansas para evitar resultados inverosimiles.
+Siguiendo las instrucciones de esta entrega, se simularán los datos de las siguientes variables, aunque tomaremos la media y la varianza de la muestra tomada en la base de datos Arkansas para evitar resultados inverosimiles.
 
 ```{r TABLA VARIABLES TALLER, echo = FALSE, warning=FALSE}
 visualizacion_variables = data.frame(
@@ -235,7 +242,7 @@ datos_completos <- left_join(datos_mieloma, Nuevas_Variables, by = "ID")
 
 ## Análisis descriptivo
 
-Si realizamos un histograma de las variablas cuantitativas, obserservamos como todas las gráficas estan centradas sobre la media y presentan una curva similar a la normal.
+Si realizamos un histograma de las variablas cuantitativas, obserservamos como todas las gráficas están centradas sobre la media y presentan una curva similar a la normal.
 Quizás, la gráfica de LDH puede presentar una distribución distinta.
 En la siguiente sección, [Pruebas estadísticas](#Pruebas-estadisticas), analizaremos si realmente las variables se ajustan a una distribución normal.
 ```{r, echo=FALSE,warning=FALSE}
@@ -288,7 +295,7 @@ ggplot(datos_completos, aes(x = OS_Time)) +
 
 
 Para las variables ordinales y nominales, realizaremos un diagrama de barras agrupadas y, además, una tabla donde aparecen las frecuencias.
-En este observamos como todas las variables tienen aproximadamente el mismo número de observaciones para cada nivel, a exepción, quizá del número de observaciones con niveles de HGB altos.
+En este observamos como todas las variables tienen aproximadamente el mismo número de observaciones para cada nivel, a excepción, quizá del número de observaciones con niveles de HGB altos.
 
 ```{r, echo=FALSE,warning=FALSE}
 # Convertir a formato largo para el gráfico
@@ -398,14 +405,14 @@ shapiro_results
 
 ```
 
-Observamos que todos los p-valores son superiores a 0.05, por lo que no se rechaza la hipotesis nula.
+Observamos que todos los p-valores son superiores a 0.05, por lo que no se rechaza la hipótesis nula.
 
-En conlusión, todas las variables siguen una distribución normal.
+En conclusión, todas las variables siguen una distribución normal.
 
 
 ## Probabilidad de tener un factor de protector
 
-En otros análisis se haobservado como aquellas personas con el isotipo *FLC* tienen un mayor tiempo de sobrevida. Por eso, veamos cual es la probabilidad de que esto ocurra.
+En otros análisis se ha observado como aquellas personas con el isotipo *FLC* tienen un mayor tiempo de sobrevida. Por eso, veamos cual es la probabilidad de que esto ocurra.
 
 Calculamos la tabla de frecuencias, posteriormente las probabilidades y para acabar 
 ```{r, echo=FALSE, warning=FALSE}
@@ -434,7 +441,7 @@ probabilidad_evento <- 1 - dbinom(0, size = n_muestra, prob = p_FLC)
 probabilidad_evento
 
 ```
-## Modelo para estimar el tiempo de sobrevida
+## Modelo lineal para estimar el tiempo de sobrevida
 
 ```{r, echo = FALSE,warning=FALSE}
 # Ajustar un modelo de regresión lineal múltiple para OS_Time
@@ -468,12 +475,30 @@ LDH: Un aumento en LDH se asocia con una disminución en el tiempo de sobrevida 
 
 Además, si obseravamos el R-cuadrado ajustado este tiene un valor muy bajo, lo que indica que la explicabilidad del modelo es bajo.
 
-En conclusión, el modelo no muestra una relación estadísticamente significativa en general entre las variables predictoras y OS_Time. Aunque la variable LDH presenta una relación significativa y negativa, el bajo valor de $R^2$ sugiere que estas variables predictoras no explican bien la variabilidad en el tiempo de supervivencia.
+Calculando ahora la función score, obtenemos
+```{r,echo=FALSE,warning=FALSE}
+# Extraer la matriz de diseño y los valores ajustados
+X <- model.matrix(modelo_os_time)
+y <- datos_completos$OS_Time
+beta_est <- coef(modelo_os_time)
 
+# Calcular la función de score
+score <- t(X) %*% (y - X %*% beta_est)
+
+# Mostrar la función de score
+print(score)
+```
+Dado que todos los valores de score son prácticamente cero, esto sugiere que el gradiente de la función de verosimilitud en relación con cada parámetro es mínimo. Es decir:
+
+No hay una tendencia a mejorar la verosimilitud ajustando los parámetros actuales.
+El modelo está bien ajustado en el sentido de que la elección de los parámetros maximiza la verosimilitud de los datos observados.
+
+En conclusión, el modelo no muestra una relación estadísticamente significativa en general entre las variables predictoras y OS_Time. Aunque la variable LDH presenta una relación significativa y negativa, el bajo valor de $R^2$ sugiere que estas variables predictoras no explican bien la variabilidad en el tiempo de supervivencia.
+Además, como hemos observado con la función score, no hay una mejora significativa posible mediante el ajuste de estos parámetros. Esto confirma que, aunque el modelo está bien ajustado en términos estadísticos, su capacidad explicativa sobre el tiempo de supervivencia es limitada en este conjunto de datos.
 
 ## Efectividad del tratimiento en el tiempo de sobrevida
 
-Analizemos si existen diferencias entre el vector de medias multivariado de la variables cuantitativas anteriormente generadas (B2M, AGE, CRP, LDH) de la población que ha recibido diferente tratamiento.
+Analicemos si existen diferencias entre el vector de medias multivariado de la variables cuantitativas anteriormente generadas (B2M, AGE, CRP, LDH) de la población que ha recibido diferente tratamiento.
 Para ello, vamos a realizar un test de Hotelling, primero usando la función de R y luego calculado el estadístico manualmente. Este test realiza el siguiente contraste:
 
 $$
@@ -553,6 +578,12 @@ En este análisis de datos sobre el Mieloma Múltiple (MM), se ha explorado el i
 4. **Tratamiento y tiempo de supervivencia**: El análisis sobre el efecto del tratamiento (**PROT**) sobre las variables cuantitativas no muestra diferencias significativas entre los tratamientos cuando se evalúa el vector de medias multivariado utilizando el test de Hotelling. El p-valor alto (0.4076) indica que no se puede rechazar la hipótesis nula de que las medias de las variables cuantitativas no son significativamente diferentes entre los tratamientos, lo que sugiere que el tratamiento no tiene un impacto claro sobre las variables seleccionadas en este análisis.
 
 # Bibliografía
+
+- **R Gallery**. Fuente consultada para la creación de gráficos en R, donde se accedió a ejemplos y guías para personalizar visualizaciones: https://r-graph-gallery.com
+
+- **Apuntes de la asignatura AD**. Material de referencia utilizado en el desarrollo del análisis de datos y los métodos estadísticos empleados en el proyecto.
+
+- **Mayo Clinic**. Información sobre el Mieloma Múltiple y datos clínicos relevantes para el análisis, incluyendo descripciones de síntomas, progresión y parámetros médicos: https://www.mayoclinic.org
 
 
 

@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Marc Arrom Esquembre">
 
-<title>Taller evaluado de repaso para el Primer Parcial</title>
+<title>Análisis de Factores Predictivos en la Supervivencia de Pacientes con Mieloma Múltiple</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -85,7 +86,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#distribuciones-variables-cuantitativas" id="toc-distribuciones-variables-cuantitativas" class="nav-link" data-scroll-target="#distribuciones-variables-cuantitativas">Distribuciones variables cuantitativas</a></li>
   <li><a href="#probabilidad-de-tener-un-factor-de-protector" id="toc-probabilidad-de-tener-un-factor-de-protector" class="nav-link" data-scroll-target="#probabilidad-de-tener-un-factor-de-protector">Probabilidad de tener un factor de protector</a></li>
-  <li><a href="#modelo-para-estimar-el-tiempo-de-sobrevida" id="toc-modelo-para-estimar-el-tiempo-de-sobrevida" class="nav-link" data-scroll-target="#modelo-para-estimar-el-tiempo-de-sobrevida">Modelo para estimar el tiempo de sobrevida</a></li>
+  <li><a href="#modelo-lineal-para-estimar-el-tiempo-de-sobrevida" id="toc-modelo-lineal-para-estimar-el-tiempo-de-sobrevida" class="nav-link" data-scroll-target="#modelo-lineal-para-estimar-el-tiempo-de-sobrevida">Modelo lineal para estimar el tiempo de sobrevida</a></li>
   <li><a href="#efectividad-del-tratimiento-en-el-tiempo-de-sobrevida" id="toc-efectividad-del-tratimiento-en-el-tiempo-de-sobrevida" class="nav-link" data-scroll-target="#efectividad-del-tratimiento-en-el-tiempo-de-sobrevida">Efectividad del tratimiento en el tiempo de sobrevida</a></li>
   </ul></li>
   <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones">Conclusiones</a></li>
@@ -97,14 +98,20 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Taller evaluado de repaso para el Primer Parcial</h1>
-<p class="subtitle lead">20582- Análisis de Datos para el GMAT</p>
+<h1 class="title">Análisis de Factores Predictivos en la Supervivencia de Pacientes con Mieloma Múltiple</h1>
+<p class="subtitle lead">Taller evaluado de repaso para el Primer Parcial</p>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Marc Arrom Esquembre </p>
+          </div>
+  </div>
     
   
     
@@ -125,28 +132,28 @@ window.Quarto = {
 <h1>Planteamiento del problema y metodología a emplear</h1>
 <p>El Mieloma Múltiple (MM) es un tipo de cáncer que afecta a las células plasmáticas, un tipo de glóbulo blanco que se encuentra en la médula ósea y que son claves en el sistema inmunológico ya que producen anticuerpos.</p>
 <p>En el MM, las células plasmáticas se vuelven anormales y comienzan a multiplicarse de forma descontrolada, produciendo únicamente un tipo de anticuerpo llamado paraproteína o proteína M, que no tiene una función útil en el organismo. Esta paraproteína aumenta progresivamente, desplazando a las otras inmunoglobulinas, cuya producción disminuye. Al reducirse las defensas naturales del cuerpo, el sistema inmunológico se ve debilitado, lo que aumenta la susceptibilidad a infecciones. Generalmente, los síntomas incluyen dolor óseo, debido al daño que produce en los huesos, fatiga, como resultado de la anemia. Otros síntomas son la pérdida de peso, insuficiencia renal y niveles altos de calcio en sangre, lo que puede provocar náuseas, sed excesiva y confusión. Por ahora, no tiene cura, pero sí un tratamiento que permite tener largos períodos de remisión, es decir, sin síntomas.</p>
-<p>En este informe vamos a genearar aleatoriamente diversas variables relacionadas con parámetros clínicos del MM y vamos a realizar algunos contrastes y modelos con el fin de analizar cual es su efecto en el tiempo de sobrevida.</p>
-<p>Los datos con los que vamos a trabjar fueron aportados por la universidad de Arkansas y estan formados por 564 observaciones de las cuales se tomaron 23 variables.</p>
+<p>En este informe vamos a generar aleatoriamente diversas variables relacionadas con parámetros clínicos del MM y vamos a realizar algunos contrastes y modelos con el fin de analizar cual es su efecto en el tiempo de sobrevida.</p>
+<p>Los datos con los que vamos a trabajar fueron aportados por la universidad de Arkansas y están formados por 564 observaciones de las cuales se tomaron 23 variables.</p>
 <p>Aquí se puede observar las variables que contiene la base de datos de Arkansas junto a una pequeña descripción.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="ibqfbshulg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ibqfbshulg table {
+<div id="zqkektqutt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zqkektqutt table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ibqfbshulg thead, #ibqfbshulg tbody, #ibqfbshulg tfoot, #ibqfbshulg tr, #ibqfbshulg td, #ibqfbshulg th {
+#zqkektqutt thead, #zqkektqutt tbody, #zqkektqutt tfoot, #zqkektqutt tr, #zqkektqutt td, #zqkektqutt th {
   border-style: none;
 }
 
-#ibqfbshulg p {
+#zqkektqutt p {
   margin: 0;
   padding: 0;
 }
 
-#ibqfbshulg .gt_table {
+#zqkektqutt .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -172,12 +179,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_caption {
+#zqkektqutt .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ibqfbshulg .gt_title {
+#zqkektqutt .gt_title {
   color: #333333;
   font-size: 18px;
   font-weight: initial;
@@ -189,7 +196,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#ibqfbshulg .gt_subtitle {
+#zqkektqutt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -201,7 +208,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#ibqfbshulg .gt_heading {
+#zqkektqutt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -213,13 +220,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_bottom_border {
+#zqkektqutt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_col_headings {
+#zqkektqutt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -234,7 +241,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_col_heading {
+#zqkektqutt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -254,7 +261,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ibqfbshulg .gt_column_spanner_outer {
+#zqkektqutt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -266,15 +273,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#ibqfbshulg .gt_column_spanner_outer:first-child {
+#zqkektqutt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ibqfbshulg .gt_column_spanner_outer:last-child {
+#zqkektqutt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ibqfbshulg .gt_column_spanner {
+#zqkektqutt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -286,11 +293,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#ibqfbshulg .gt_spanner_row {
+#zqkektqutt .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ibqfbshulg .gt_group_heading {
+#zqkektqutt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -316,7 +323,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#ibqfbshulg .gt_empty_group_heading {
+#zqkektqutt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -331,15 +338,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#ibqfbshulg .gt_from_md > :first-child {
+#zqkektqutt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ibqfbshulg .gt_from_md > :last-child {
+#zqkektqutt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ibqfbshulg .gt_row {
+#zqkektqutt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -358,7 +365,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#ibqfbshulg .gt_stub {
+#zqkektqutt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -371,7 +378,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ibqfbshulg .gt_stub_row_group {
+#zqkektqutt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -385,15 +392,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#ibqfbshulg .gt_row_group_first td {
+#zqkektqutt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ibqfbshulg .gt_row_group_first th {
+#zqkektqutt .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ibqfbshulg .gt_summary_row {
+#zqkektqutt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -403,16 +410,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ibqfbshulg .gt_first_summary_row {
+#zqkektqutt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_first_summary_row.thick {
+#zqkektqutt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ibqfbshulg .gt_last_summary_row {
+#zqkektqutt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -422,7 +429,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_grand_summary_row {
+#zqkektqutt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -432,7 +439,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ibqfbshulg .gt_first_grand_summary_row {
+#zqkektqutt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -442,7 +449,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_last_grand_summary_row_top {
+#zqkektqutt .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -452,11 +459,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_striped {
+#zqkektqutt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ibqfbshulg .gt_table_body {
+#zqkektqutt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -465,7 +472,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_footnotes {
+#zqkektqutt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -479,7 +486,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_footnote {
+#zqkektqutt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -488,7 +495,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ibqfbshulg .gt_sourcenotes {
+#zqkektqutt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -502,7 +509,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#ibqfbshulg .gt_sourcenote {
+#zqkektqutt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -510,72 +517,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#ibqfbshulg .gt_left {
+#zqkektqutt .gt_left {
   text-align: left;
 }
 
-#ibqfbshulg .gt_center {
+#zqkektqutt .gt_center {
   text-align: center;
 }
 
-#ibqfbshulg .gt_right {
+#zqkektqutt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ibqfbshulg .gt_font_normal {
+#zqkektqutt .gt_font_normal {
   font-weight: normal;
 }
 
-#ibqfbshulg .gt_font_bold {
+#zqkektqutt .gt_font_bold {
   font-weight: bold;
 }
 
-#ibqfbshulg .gt_font_italic {
+#zqkektqutt .gt_font_italic {
   font-style: italic;
 }
 
-#ibqfbshulg .gt_super {
+#zqkektqutt .gt_super {
   font-size: 65%;
 }
 
-#ibqfbshulg .gt_footnote_marks {
+#zqkektqutt .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ibqfbshulg .gt_asterisk {
+#zqkektqutt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ibqfbshulg .gt_indent_1 {
+#zqkektqutt .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ibqfbshulg .gt_indent_2 {
+#zqkektqutt .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ibqfbshulg .gt_indent_3 {
+#zqkektqutt .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ibqfbshulg .gt_indent_4 {
+#zqkektqutt .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ibqfbshulg .gt_indent_5 {
+#zqkektqutt .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ibqfbshulg .katex-display {
+#zqkektqutt .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ibqfbshulg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#zqkektqutt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -694,26 +701,26 @@ window.Quarto = {
 <h1>Generación de datos y analisis descriptivo</h1>
 <section id="simulación-de-datos" class="level2">
 <h2 class="anchored" data-anchor-id="simulación-de-datos">Simulación de datos</h2>
-<p>Siguiendo las instrucciones de esta entrega, vamos a simular los datos de las siguientes variables, aunque tomaremos la media y la varianza de la muestra tomada en la base de datos Arkansas para evitar resultados inverosimiles.</p>
+<p>Siguiendo las instrucciones de esta entrega, se simularán los datos de las siguientes variables, aunque tomaremos la media y la varianza de la muestra tomada en la base de datos Arkansas para evitar resultados inverosimiles.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="krgzclukff" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#krgzclukff table {
+<div id="tjzphhjkqt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tjzphhjkqt table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#krgzclukff thead, #krgzclukff tbody, #krgzclukff tfoot, #krgzclukff tr, #krgzclukff td, #krgzclukff th {
+#tjzphhjkqt thead, #tjzphhjkqt tbody, #tjzphhjkqt tfoot, #tjzphhjkqt tr, #tjzphhjkqt td, #tjzphhjkqt th {
   border-style: none;
 }
 
-#krgzclukff p {
+#tjzphhjkqt p {
   margin: 0;
   padding: 0;
 }
 
-#krgzclukff .gt_table {
+#tjzphhjkqt .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -739,12 +746,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#krgzclukff .gt_caption {
+#tjzphhjkqt .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#krgzclukff .gt_title {
+#tjzphhjkqt .gt_title {
   color: #333333;
   font-size: 18px;
   font-weight: initial;
@@ -756,7 +763,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#krgzclukff .gt_subtitle {
+#tjzphhjkqt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -768,7 +775,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#krgzclukff .gt_heading {
+#tjzphhjkqt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -780,13 +787,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#krgzclukff .gt_bottom_border {
+#tjzphhjkqt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#krgzclukff .gt_col_headings {
+#tjzphhjkqt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -801,7 +808,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#krgzclukff .gt_col_heading {
+#tjzphhjkqt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -821,7 +828,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#krgzclukff .gt_column_spanner_outer {
+#tjzphhjkqt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -833,15 +840,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#krgzclukff .gt_column_spanner_outer:first-child {
+#tjzphhjkqt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#krgzclukff .gt_column_spanner_outer:last-child {
+#tjzphhjkqt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#krgzclukff .gt_column_spanner {
+#tjzphhjkqt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -853,11 +860,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#krgzclukff .gt_spanner_row {
+#tjzphhjkqt .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#krgzclukff .gt_group_heading {
+#tjzphhjkqt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -883,7 +890,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#krgzclukff .gt_empty_group_heading {
+#tjzphhjkqt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -898,15 +905,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#krgzclukff .gt_from_md > :first-child {
+#tjzphhjkqt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#krgzclukff .gt_from_md > :last-child {
+#tjzphhjkqt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#krgzclukff .gt_row {
+#tjzphhjkqt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -925,7 +932,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#krgzclukff .gt_stub {
+#tjzphhjkqt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -938,7 +945,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#krgzclukff .gt_stub_row_group {
+#tjzphhjkqt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -952,15 +959,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#krgzclukff .gt_row_group_first td {
+#tjzphhjkqt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#krgzclukff .gt_row_group_first th {
+#tjzphhjkqt .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#krgzclukff .gt_summary_row {
+#tjzphhjkqt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -970,16 +977,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#krgzclukff .gt_first_summary_row {
+#tjzphhjkqt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#krgzclukff .gt_first_summary_row.thick {
+#tjzphhjkqt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#krgzclukff .gt_last_summary_row {
+#tjzphhjkqt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -989,7 +996,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#krgzclukff .gt_grand_summary_row {
+#tjzphhjkqt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -999,7 +1006,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#krgzclukff .gt_first_grand_summary_row {
+#tjzphhjkqt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1009,7 +1016,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#krgzclukff .gt_last_grand_summary_row_top {
+#tjzphhjkqt .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1019,11 +1026,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#krgzclukff .gt_striped {
+#tjzphhjkqt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#krgzclukff .gt_table_body {
+#tjzphhjkqt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1032,7 +1039,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#krgzclukff .gt_footnotes {
+#tjzphhjkqt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1046,7 +1053,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#krgzclukff .gt_footnote {
+#tjzphhjkqt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1055,7 +1062,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#krgzclukff .gt_sourcenotes {
+#tjzphhjkqt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1069,7 +1076,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#krgzclukff .gt_sourcenote {
+#tjzphhjkqt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1077,72 +1084,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#krgzclukff .gt_left {
+#tjzphhjkqt .gt_left {
   text-align: left;
 }
 
-#krgzclukff .gt_center {
+#tjzphhjkqt .gt_center {
   text-align: center;
 }
 
-#krgzclukff .gt_right {
+#tjzphhjkqt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#krgzclukff .gt_font_normal {
+#tjzphhjkqt .gt_font_normal {
   font-weight: normal;
 }
 
-#krgzclukff .gt_font_bold {
+#tjzphhjkqt .gt_font_bold {
   font-weight: bold;
 }
 
-#krgzclukff .gt_font_italic {
+#tjzphhjkqt .gt_font_italic {
   font-style: italic;
 }
 
-#krgzclukff .gt_super {
+#tjzphhjkqt .gt_super {
   font-size: 65%;
 }
 
-#krgzclukff .gt_footnote_marks {
+#tjzphhjkqt .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#krgzclukff .gt_asterisk {
+#tjzphhjkqt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#krgzclukff .gt_indent_1 {
+#tjzphhjkqt .gt_indent_1 {
   text-indent: 5px;
 }
 
-#krgzclukff .gt_indent_2 {
+#tjzphhjkqt .gt_indent_2 {
   text-indent: 10px;
 }
 
-#krgzclukff .gt_indent_3 {
+#tjzphhjkqt .gt_indent_3 {
   text-indent: 15px;
 }
 
-#krgzclukff .gt_indent_4 {
+#tjzphhjkqt .gt_indent_4 {
   text-indent: 20px;
 }
 
-#krgzclukff .gt_indent_5 {
+#tjzphhjkqt .gt_indent_5 {
   text-indent: 25px;
 }
 
-#krgzclukff .katex-display {
+#tjzphhjkqt .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#krgzclukff div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#tjzphhjkqt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1214,7 +1221,7 @@ window.Quarto = {
 </section>
 <section id="análisis-descriptivo" class="level2">
 <h2 class="anchored" data-anchor-id="análisis-descriptivo">Análisis descriptivo</h2>
-<p>Si realizamos un histograma de las variablas cuantitativas, obserservamos como todas las gráficas estan centradas sobre la media y presentan una curva similar a la normal. Quizás, la gráfica de LDH puede presentar una distribución distinta. En la siguiente sección, <a href="#Pruebas-estadisticas">Pruebas estadísticas</a>, analizaremos si realmente las variables se ajustan a una distribución normal.</p>
+<p>Si realizamos un histograma de las variablas cuantitativas, obserservamos como todas las gráficas están centradas sobre la media y presentan una curva similar a la normal. Quizás, la gráfica de LDH puede presentar una distribución distinta. En la siguiente sección, <a href="#Pruebas-estadisticas">Pruebas estadísticas</a>, analizaremos si realmente las variables se ajustan a una distribución normal.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -1234,7 +1241,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Para las variables ordinales y nominales, realizaremos un diagrama de barras agrupadas y, además, una tabla donde aparecen las frecuencias. En este observamos como todas las variables tienen aproximadamente el mismo número de observaciones para cada nivel, a exepción, quizá del número de observaciones con niveles de HGB altos.</p>
+<p>Para las variables ordinales y nominales, realizaremos un diagrama de barras agrupadas y, además, una tabla donde aparecen las frecuencias. En este observamos como todas las variables tienen aproximadamente el mismo número de observaciones para cada nivel, a excepción, quizá del número de observaciones con niveles de HGB altos.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -1303,12 +1310,12 @@ window.Quarto = {
 0.12063554 0.33348349 0.61316723 0.74107711 0.09061219 </code></pre>
 </div>
 </div>
-<p>Observamos que todos los p-valores son superiores a 0.05, por lo que no se rechaza la hipotesis nula.</p>
-<p>En conlusión, todas las variables siguen una distribución normal.</p>
+<p>Observamos que todos los p-valores son superiores a 0.05, por lo que no se rechaza la hipótesis nula.</p>
+<p>En conclusión, todas las variables siguen una distribución normal.</p>
 </section>
 <section id="probabilidad-de-tener-un-factor-de-protector" class="level2">
 <h2 class="anchored" data-anchor-id="probabilidad-de-tener-un-factor-de-protector">Probabilidad de tener un factor de protector</h2>
-<p>En otros análisis se haobservado como aquellas personas con el isotipo <em>FLC</em> tienen un mayor tiempo de sobrevida. Por eso, veamos cual es la probabilidad de que esto ocurra.</p>
+<p>En otros análisis se ha observado como aquellas personas con el isotipo <em>FLC</em> tienen un mayor tiempo de sobrevida. Por eso, veamos cual es la probabilidad de que esto ocurra.</p>
 <p>Calculamos la tabla de frecuencias, posteriormente las probabilidades y para acabar</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -1326,8 +1333,8 @@ FLC IgA IgD IgG
 </div>
 </div>
 </section>
-<section id="modelo-para-estimar-el-tiempo-de-sobrevida" class="level2">
-<h2 class="anchored" data-anchor-id="modelo-para-estimar-el-tiempo-de-sobrevida">Modelo para estimar el tiempo de sobrevida</h2>
+<section id="modelo-lineal-para-estimar-el-tiempo-de-sobrevida" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-lineal-para-estimar-el-tiempo-de-sobrevida">Modelo lineal para estimar el tiempo de sobrevida</h2>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>            Coeficiente_Beta Error_Estandar t_valor      P_valor
@@ -1344,11 +1351,24 @@ LDH                 -0.05930        0.02854  -2.078 0.0394952796</code></pre>
 <p>CRP: Su coeficiente es 0.128, lo que sugiere un incremento en el tiempo de sobrevida por cada unidad adicional, pero de nuevo, esta relación no es estadísticamente significativa (p = 0.180).</p>
 <p>LDH: Un aumento en LDH se asocia con una disminución en el tiempo de sobrevida general (coeficiente de -0.059), y esta relación sí es significativa (p = 0.039), indicando que LDH es un predictor relevante para el tiempo de sobrevida.</p>
 <p>Además, si obseravamos el R-cuadrado ajustado este tiene un valor muy bajo, lo que indica que la explicabilidad del modelo es bajo.</p>
-<p>En conclusión, el modelo no muestra una relación estadísticamente significativa en general entre las variables predictoras y OS_Time. Aunque la variable LDH presenta una relación significativa y negativa, el bajo valor de <span class="math inline">\(R^2\)</span> sugiere que estas variables predictoras no explican bien la variabilidad en el tiempo de supervivencia.</p>
+<p>Calculando ahora la función score, obtenemos</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                     [,1]
+(Intercept) -1.939782e-12
+AGE         -1.141416e-10
+B2M         -3.535661e-11
+CRP         -1.093667e-10
+LDH         -3.528839e-10</code></pre>
+</div>
+</div>
+<p>Dado que todos los valores de score son prácticamente cero, esto sugiere que el gradiente de la función de verosimilitud en relación con cada parámetro es mínimo. Es decir:</p>
+<p>No hay una tendencia a mejorar la verosimilitud ajustando los parámetros actuales. El modelo está bien ajustado en el sentido de que la elección de los parámetros maximiza la verosimilitud de los datos observados.</p>
+<p>En conclusión, el modelo no muestra una relación estadísticamente significativa en general entre las variables predictoras y OS_Time. Aunque la variable LDH presenta una relación significativa y negativa, el bajo valor de <span class="math inline">\(R^2\)</span> sugiere que estas variables predictoras no explican bien la variabilidad en el tiempo de supervivencia. Además, como hemos observado con la función score, no hay una mejora significativa posible mediante el ajuste de estos parámetros. Esto confirma que, aunque el modelo está bien ajustado en términos estadísticos, su capacidad explicativa sobre el tiempo de supervivencia es limitada en este conjunto de datos.</p>
 </section>
 <section id="efectividad-del-tratimiento-en-el-tiempo-de-sobrevida" class="level2">
 <h2 class="anchored" data-anchor-id="efectividad-del-tratimiento-en-el-tiempo-de-sobrevida">Efectividad del tratimiento en el tiempo de sobrevida</h2>
-<p>Analizemos si existen diferencias entre el vector de medias multivariado de la variables cuantitativas anteriormente generadas (B2M, AGE, CRP, LDH) de la población que ha recibido diferente tratamiento. Para ello, vamos a realizar un test de Hotelling, primero usando la función de R y luego calculado el estadístico manualmente. Este test realiza el siguiente contraste:</p>
+<p>Analicemos si existen diferencias entre el vector de medias multivariado de la variables cuantitativas anteriormente generadas (B2M, AGE, CRP, LDH) de la población que ha recibido diferente tratamiento. Para ello, vamos a realizar un test de Hotelling, primero usando la función de R y luego calculado el estadístico manualmente. Este test realiza el siguiente contraste:</p>
 <p><span class="math display">\[
 \begin{cases}
 H_0 : \boldsymbol{\mu}_A = \boldsymbol{\mu}_B \\
@@ -1388,6 +1408,11 @@ P-value:  0.4076 </code></pre>
 </section>
 <section id="bibliografía" class="level1">
 <h1>Bibliografía</h1>
+<ul>
+<li><p><strong>R Gallery</strong>. Fuente consultada para la creación de gráficos en R, donde se accedió a ejemplos y guías para personalizar visualizaciones: https://r-graph-gallery.com</p></li>
+<li><p><strong>Apuntes de la asignatura AD</strong>. Material de referencia utilizado en el desarrollo del análisis de datos y los métodos estadísticos empleados en el proyecto.</p></li>
+<li><p><strong>Mayo Clinic</strong>. Información sobre el Mieloma Múltiple y datos clínicos relevantes para el análisis, incluyendo descripciones de síntomas, progresión y parámetros médicos: https://www.mayoclinic.org</p></li>
+</ul>
 </section>
 
 </main>
