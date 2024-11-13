@@ -585,6 +585,6 @@ En este análisis de datos sobre el Mieloma Múltiple (MM), se ha explorado el i
 
 - **Mayo Clinic**. Información sobre el Mieloma Múltiple y datos clínicos relevantes para el análisis, incluyendo descripciones de síntomas, progresión y parámetros médicos: https://www.mayoclinic.org
 
-
+- **Acceso al repositorio**. https://github.com/MarcArrom11/TallerAD.git
 
 
