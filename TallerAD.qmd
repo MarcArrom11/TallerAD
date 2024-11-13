@@ -577,6 +577,8 @@ En este análisis de datos sobre el Mieloma Múltiple (MM), se ha explorado el i
 
 4. **Tratamiento y tiempo de supervivencia**: El análisis sobre el efecto del tratamiento (**PROT**) sobre las variables cuantitativas no muestra diferencias significativas entre los tratamientos cuando se evalúa el vector de medias multivariado utilizando el test de Hotelling. El p-valor alto (0.4076) indica que no se puede rechazar la hipótesis nula de que las medias de las variables cuantitativas no son significativamente diferentes entre los tratamientos, lo que sugiere que el tratamiento no tiene un impacto claro sobre las variables seleccionadas en este análisis.
 
+
+
 # Bibliografía
 
 - **R Gallery**. Fuente consultada para la creación de gráficos en R, donde se accedió a ejemplos y guías para personalizar visualizaciones: https://r-graph-gallery.com
